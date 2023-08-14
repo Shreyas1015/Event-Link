@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import BackgroundVideo from "../Components/BackgroundVideo";
 
 const LoginPage = ({ handleLogin, token }) => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -18,6 +20,9 @@ const LoginPage = ({ handleLogin, token }) => {
     }));
   };
 
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -26,7 +31,8 @@ const LoginPage = ({ handleLogin, token }) => {
         password: formData.password,
       });
       handleLogin(res.data.token);
-      navigate("/dashboard");
+      const userId = res.data.uid; // Get the uid from the response
+      navigate(`/adminprofile?uid=${userId}`); // Pass uid as query parameter
       alert("Logged In Successfully");
     } catch (error) {
       console.error(error);
@@ -39,35 +45,104 @@ const LoginPage = ({ handleLogin, token }) => {
   };
 
   if (token) {
-    navigate("/dashboard");
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      navigate(`/adminprofile?uid=${userId}`);
+    }
   }
+
   return (
     <>
-      <div className="container">
-        <form onSubmit={handleSubmit}>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            className="form-label"
-            placeholder="email@gmail.com"
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <input
-            id="password"
-            type="password"
-            name="password"
-            className="form-label"
-            placeholder="atleast 8-characters"
-            required
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <p className="text-danger">{errorMessage}</p>
-          <input type="submit" value="Login" />
-        </form>
+      <div className="container-fluid">
+        <BackgroundVideo />
+        <div className="row">
+          <div className="col-lg-6 m-0 p-0">
+            <img
+              className="img-fluid"
+              style={{ height: "100vh", objectFit: "cover" }}
+              src="/Images/Logo1.png"
+              alt=""
+            />
+          </div>
+          <div className="col-lg-6 m-0 p-0">
+            <form
+              className="glassomorphic-effect login-container mx-auto rounded-4"
+              onSubmit={handleSubmit}
+            >
+              <div className="text-center login-text pt-4 mx-auto mb-5">
+                <h1 className="mb-3">Login</h1>
+                <i>
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  Recusandae, ducimus!
+                </i>
+              </div>
+              <div className="form-container pb-4 mx-auto">
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    id="email"
+                    placeholder="name@gmail.com"
+                    required
+                    onChange={handleChange}
+                    value={formData.email}
+                  />
+                </div>
+                {/* <div className="mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    id="password"
+                    placeholder="At least 8-20 charac."
+                    required
+                    onChange={handleChange}
+                    value={formData.password}
+                  />
+                </div> */}
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      className="form-control"
+                      id="password"
+                      placeholder="At least 8-20 charac."
+                      required
+                      onChange={handleChange}
+                      value={formData.password}
+                    />
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      onClick={handleTogglePassword}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+                <span className="text-danger p-2">{errorMessage}</span>
+                <br />
+                <input
+                  className="btn px-4 py-2"
+                  style={{ backgroundColor: "#62c1bf", color: "white" }}
+                  type="submit"
+                  value="Login"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </>
   );

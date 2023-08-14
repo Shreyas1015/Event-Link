@@ -1,13 +1,73 @@
-body {
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+li:hover {
+  cursor: pointer;
+}
+/* color : #62c1bf */
+/* #272727
+#444444 */
+/* glassomorphic-effect */
+.glassomorphic-effect {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  border: 1px solid transparent;
+}
+
+.blue-buttons {
+  color: #62c1bf;
+  border-color: #62c1bf;
+}
+.blue-buttons:hover {
+  color: black;
+  background-color: #62c1bf;
+}
+
+.login-container {
+  position: relative;
+  top: 21vh;
+  width: 30vw;
+}
+.form-container {
+  width: 25vw;
+}
+
+.login-text {
+  color: #62c1bf;
+  width: 24rem;
+}
+
+.background-video {
+  width: 99%;
+  height: 100vh;
+  object-fit: cover;
+  object-position: 10% center;
+}
+
+.sidebar {
+  height: auto;
+}
+
+.brand-img {
+  width: 13vw;
+  height: 9vh;
+  object-fit: cover;
+  mix-blend-mode: hard-light;
+  filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+}
+
+.admin-profile-inputs {
+  width: 50vw;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.dashboard-title-img {
+  width: 100%;
+  height: 12rem;
+  object-fit: fill;
 }
