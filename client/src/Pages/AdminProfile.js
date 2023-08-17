@@ -4,15 +4,39 @@ import { useLocation } from "react-router-dom";
 import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
 import axios from "axios";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
+  authDomain: "event-link-b0613.firebaseapp.com",
+  projectId: "event-link-b0613",
+  storageBucket: "event-link-b0613.appspot.com",
+  messagingSenderId: "21608943759",
+  appId: "1:21608943759:web:b96c788f67bcab9ee720fa",
+  measurementId: "G-ZMGC41BPHD",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
 
 const AdminProfile = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
-  console.log("UserId : ", uid);
+  console.log("UserId: ", uid);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [adminID, setAdminID] = useState("");
+  const [formData, setFormData] = useState({
+    profile_img: "",
+    uid: uid,
+    college_name: "",
+    email: "",
+    contact: "",
+    address: "",
+  });
 
   useEffect(() => {
     async function fetchAdminID() {
@@ -31,21 +55,20 @@ const AdminProfile = ({ token }) => {
     fetchAdminID();
   }, [uid]);
 
-  const [formData, setFormData] = useState({
-    profile_img: "",
-    uid: uid,
-    college_name: "",
-    email: "",
-    contact: "",
-    address: "",
-  });
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === "profile_img" && files && files[0]) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const BackToLogin = () => {
@@ -59,9 +82,18 @@ const AdminProfile = ({ token }) => {
         Authorization: `Bearer ${token}`,
       };
 
+      const imageFile = formData.profile_img;
+      const imageRef = storage
+        .ref()
+        .child(`profile_images/${uid}_${imageFile.name}`);
+      await imageRef.put(imageFile, { contentType: "image/jpeg" });
+      const imageUrl = await imageRef.getDownloadURL();
+
+      const updatedFormData = { ...formData, profile_img: imageUrl };
+
       const response = await axios.post(
         "http://localhost:5000/profile_setup",
-        formData,
+        updatedFormData,
         { headers }
       );
 
@@ -160,9 +192,16 @@ const AdminProfile = ({ token }) => {
                     name="profile_img"
                     className="form-control admin-profile-inputs"
                     id="profile_img"
+                    accept="image/*"
                     onChange={handleChange}
-                    value={formData.profile_img}
                   />
+                  {formData.profile_img && (
+                    <img
+                      src={URL.createObjectURL(formData.profile_img)}
+                      alt="Profile Preview"
+                      style={{ maxWidth: "100%", marginTop: "10px" }}
+                    />
+                  )}
                 </div>
                 <div className="mb-3">
                   <label

@@ -35,6 +35,14 @@ const EditPost = ({ token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check if cover_img is empty
+    if (!formData.cover_img) {
+      alert("Cover Img is required.");
+      return;
+    }
+
+    // Reset error message
+    setErrorMessage("");
     try {
       const headers = {
         Authorization: `Bearer ${token}`,

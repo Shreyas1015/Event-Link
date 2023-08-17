@@ -4,20 +4,26 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const ImageKit = require("imagekit");
+
 const port = 5000;
 
 const app = express();
 
-//MiddleWares
-app.use(cors());
-app.use(express.json());
+// MiddleWares
+const allowedOrigins = ["http://localhost:3000"];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
-const imagekit = new ImageKit({
-  publicKey: "public_mMXvLtBav33pk2gNos+4HhmLplA=",
-  privateKey: "private_41dGTNa/quW9btdsvEw58hbwKDQ=",
-  urlEndpoint: "https://ik.imagekit.io/xmzipbjn36",
-});
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.json());
 
 //Database Connection
 const connection = mysql.createConnection({
@@ -143,7 +149,6 @@ app.post("/signup", async (req, res) => {
 });
 
 //Profile SetUp
-
 app.get("/get_admin_id", (req, res) => {
   const uid = req.query.uid;
 
@@ -275,6 +280,7 @@ app.get("/get_admin_data", authenticateToken, (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     } else {
       const adminData = adminDataResults[0];
+      console.log("Fetched admin data:", adminData); // Log the fetched admin data
       res.status(200).json({ adminData });
     }
   });
@@ -297,7 +303,7 @@ app.delete("/delete_post/:post_id", authenticateToken, (req, res) => {
 });
 
 // Route to get posts
-app.get("/get_posts", (req, res) => {
+app.get("/get_posts", authenticateToken, (req, res) => {
   const uid = req.query.uid;
   const adminID = req.query.admin_id;
   const postsQuery = "SELECT * FROM add_posts WHERE uid = ? AND admin_id = ?";

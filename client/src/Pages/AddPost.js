@@ -3,6 +3,22 @@ import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
+  authDomain: "event-link-b0613.firebaseapp.com",
+  projectId: "event-link-b0613",
+  storageBucket: "event-link-b0613.appspot.com",
+  messagingSenderId: "21608943759",
+  appId: "1:21608943759:web:b96c788f67bcab9ee720fa",
+  measurementId: "G-ZMGC41BPHD",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
 
 const AddPost = ({ token }) => {
   const navigate = useNavigate();
@@ -23,11 +39,19 @@ const AddPost = ({ token }) => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === "cover_img" && files && files[0]) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -36,8 +60,17 @@ const AddPost = ({ token }) => {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      console.log("Image URL:", formData.cover_img);
-      await axios.post("http://localhost:5000/add_posts", formData, {
+
+      const imageFile = formData.cover_img;
+      const imageRef = storage
+        .ref()
+        .child(`All_Posts_Images/${uid}_${imageFile.name}`);
+      await imageRef.put(imageFile, { contentType: "image/jpeg" });
+      const imageUrl = await imageRef.getDownloadURL();
+
+      const updatedFormData = { ...formData, cover_img: imageUrl };
+
+      await axios.post("http://localhost:5000/add_posts", updatedFormData, {
         headers,
       });
 
@@ -116,17 +149,21 @@ const AddPost = ({ token }) => {
                   value={formData.admin_id}
                 />
                 <div className="mb-3">
-                  <label htmlFor="cover_img" className="form-label fw-bolder ">
-                    Cover Img :
+                  <label
+                    htmlFor="cover_img"
+                    className="form-label fw-bolder"
+                    onChange={handleChange}
+                    value={formData.cover_img}
+                  >
+                    Cover Img:
                   </label>
                   <input
                     type="file"
                     name="cover_img"
                     className="form-control admin-profile-inputs"
                     id="cover_img"
-                    required
+                    accept="image/*"
                     onChange={handleChange}
-                    value={formData.cover_img}
                   />
                 </div>
                 <div className="mb-3">

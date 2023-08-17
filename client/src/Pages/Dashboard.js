@@ -15,8 +15,8 @@ const Dashboard = ({ token }) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState({
-    titleImage: "",
-    collegeName: "",
+    profile_img: "",
+    college_name: "",
     contact: "",
     email: "",
   });
@@ -37,6 +37,7 @@ const Dashboard = ({ token }) => {
           { headers }
         );
         console.log("Dashboard data response:", dashboardResponse.data);
+        console.log("Title Image URL:", dashboardData.profile_img);
         setDashboardData(dashboardResponse.data.adminData);
 
         const postsResponse = await axios.get(
@@ -56,7 +57,7 @@ const Dashboard = ({ token }) => {
     if (uid && adminID && storedToken) {
       fetchData();
     }
-  }, [uid, adminID, storedToken]);
+  }, [uid, adminID, storedToken, dashboardData.profile_img]);
 
   const BackToLogin = () => {
     navigate("/");
@@ -119,11 +120,17 @@ const Dashboard = ({ token }) => {
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
             <div className="container my-3">
               <div className="dashboard-info">
-                <img
-                  src={decodeURIComponent(dashboardData.titleImage)}
-                  alt="Dashboard Title"
-                />
-                <h3>{dashboardData.collegeName}</h3>
+                {dashboardData.profile_img ? (
+                  <img
+                    src={dashboardData.profile_img}
+                    alt="Dashboard Title"
+                    className="dashboard-title-img"
+                    onError={() => console.log("Title Image Load Error")}
+                  />
+                ) : (
+                  <p>No title image available</p>
+                )}
+                <h3>{dashboardData.college_name}</h3>
                 <p>Contact: {dashboardData.contact}</p>
                 <p>Email: {dashboardData.email}</p>
               </div>
@@ -136,16 +143,31 @@ const Dashboard = ({ token }) => {
                   posts.map((post) => (
                     <div className="col-lg-4" key={post.posts_id}>
                       <div className="card my-3" style={{ width: "18rem" }}>
-                        <img
-                          src={post.cover_img}
-                          className="card-img-top img-fluid"
-                          alt="..."
-                        />
+                        {post.cover_img ? (
+                          <img
+                            src={post.cover_img}
+                            className="card-img-top img-fluid"
+                            style={{
+                              maxWidth: "100%",
+                              height: "17rem",
+                              objectFit: "contain",
+                            }}
+                            alt="..."
+                          />
+                        ) : (
+                          <p>No cover image available</p>
+                        )}
+
                         <div className="card-body">
                           <h5 className="card-title">{post.event_name}</h5>
-                          <p className="card-text">{post.event_desc}</p>
+                          <p
+                            className="card-text"
+                            style={{ height: "3rem", overflow: "hidden" }}
+                          >
+                            {post.event_desc}
+                          </p>
                           <Link
-                            to={`/edit_post?post_id=${post.posts_id}`}
+                            to={`/edit_post?post_id=${post.posts_id}&admin_id=${post.admin_id}&uid=${post.uid}`}
                             className="post-link text-decoration-none"
                           >
                             <button className="btn blue-buttons me-4">
