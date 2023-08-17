@@ -43,17 +43,7 @@ const DasboardNavbar = () => {
               />
             </div>
             <div className="offcanvas-body">
-              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li className="nav-item">
-                  <a
-                    className="nav-link active"
-                    aria-current="page"
-                    href="/dashboard"
-                  >
-                    Home
-                  </a>
-                </li>
-              </ul>
+              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3"></ul>
               <form className="d-flex" role="search">
                 <input
                   className="form-control me-2"

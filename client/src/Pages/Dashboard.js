@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
-import PostsCard from "../Components/PostsCard";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = ({ token }) => {
@@ -33,7 +32,6 @@ const Dashboard = ({ token }) => {
           Authorization: `Bearer ${storedToken}`,
         };
 
-        // Fetch dashboard data
         const dashboardResponse = await axios.get(
           `http://localhost:5000/get_admin_data?uid=${uid}&admin_id=${adminID}`,
           { headers }
@@ -41,7 +39,6 @@ const Dashboard = ({ token }) => {
         console.log("Dashboard data response:", dashboardResponse.data);
         setDashboardData(dashboardResponse.data.adminData);
 
-        // Fetch posts
         const postsResponse = await axios.get(
           `http://localhost:5000/get_posts?uid=${uid}&admin_id=${adminID}`,
           { headers }
@@ -62,9 +59,26 @@ const Dashboard = ({ token }) => {
   }, [uid, adminID, storedToken]);
 
   const BackToLogin = () => {
-    navigate("/login");
+    navigate("/");
   };
 
+  const handleDelete = async (postID) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      await axios.delete(`http://localhost:5000/delete_post/${postID}`, {
+        headers,
+      });
+
+      setPosts((prevPosts) =>
+        prevPosts.filter((post) => post.posts_id !== postID)
+      );
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
   if (!(uid && adminID)) {
     return (
       <>
@@ -104,27 +118,48 @@ const Dashboard = ({ token }) => {
           </div>
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
             <div className="container my-3">
-              <h2>YOUR POSTS</h2>
               <div className="dashboard-info">
-                <img src={dashboardData.titleImage} alt="Dashboard Title" />
+                <img
+                  src={decodeURIComponent(dashboardData.titleImage)}
+                  alt="Dashboard Title"
+                />
                 <h3>{dashboardData.collegeName}</h3>
                 <p>Contact: {dashboardData.contact}</p>
                 <p>Email: {dashboardData.email}</p>
               </div>
               <hr />
+              <h2>YOUR POSTS</h2>
               <div className="row">
                 {isLoading ? (
                   <p>Loading posts...</p>
                 ) : (
                   posts.map((post) => (
                     <div className="col-lg-4" key={post.posts_id}>
-                      <PostsCard
-                        image={post.cover_img} // Assuming cover_img is the URL
-                        title={post.event_name}
-                        desc={post.event_desc}
-                        edit="Edit Post"
-                        delete="Delete Post"
-                      />
+                      <div className="card my-3" style={{ width: "18rem" }}>
+                        <img
+                          src={post.cover_img}
+                          className="card-img-top img-fluid"
+                          alt="..."
+                        />
+                        <div className="card-body">
+                          <h5 className="card-title">{post.event_name}</h5>
+                          <p className="card-text">{post.event_desc}</p>
+                          <Link
+                            to={`/edit_post?post_id=${post.posts_id}`}
+                            className="post-link text-decoration-none"
+                          >
+                            <button className="btn blue-buttons me-4">
+                              Edit
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(post.posts_id)}
+                            className="btn blue-buttons ms-4"
+                          >
+                            Delete Post
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))
                 )}

@@ -4,6 +4,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const ImageKit = require("imagekit");
 const port = 5000;
 
 const app = express();
@@ -11,6 +12,12 @@ const app = express();
 //MiddleWares
 app.use(cors());
 app.use(express.json());
+
+const imagekit = new ImageKit({
+  publicKey: "public_mMXvLtBav33pk2gNos+4HhmLplA=",
+  privateKey: "private_41dGTNa/quW9btdsvEw58hbwKDQ=",
+  urlEndpoint: "https://ik.imagekit.io/xmzipbjn36",
+});
 
 //Database Connection
 const connection = mysql.createConnection({
@@ -48,7 +55,7 @@ function authenticateToken(req, res, next) {
   } else {
     jwt.verify(token, JWTSecreteKey, (err, user) => {
       if (err) {
-        console.log("Token Verification Error:", err); // Log verification error
+        console.log("Token Verification Error:", err);
         return res.status(403).json({ error: "Forbidden" });
       }
       req.userID = user.userId;
@@ -75,7 +82,6 @@ app.post("/login", async (req, res) => {
           .json({ error: "User Not Found / Invalid Credentials" });
       }
 
-      // Compare the provided password with the hashed password stored in the database
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
@@ -97,7 +103,6 @@ app.post("/signup", async (req, res) => {
   const formData = req.body;
 
   try {
-    // Check if the user already exists in the database
     const searchQuery = "SELECT * FROM users WHERE email = ?";
     connection.query(searchQuery, [formData.email], async (err, result) => {
       if (err) {
@@ -110,11 +115,9 @@ app.post("/signup", async (req, res) => {
         return res.status(400).json({ error: "User already exists" });
       }
 
-      // Hash the password before storing in the database
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(formData.password, saltRounds);
 
-      // Store the user data in the database
       const insertQuery = "INSERT INTO users (email, password) VALUES (?, ?)";
       connection.query(
         insertQuery,
@@ -160,11 +163,11 @@ app.get("/get_admin_id", (req, res) => {
   });
 });
 
+// Profile setup endpoint
 app.post("/profile_setup", authenticateToken, (req, res) => {
   const formData = req.body;
   const uid = formData.uid;
 
-  // Check if profile data exists for the given UID
   const checkQuery = "SELECT * FROM admin_profile WHERE uid = ?";
   connection.query(checkQuery, [uid], (checkErr, checkResult) => {
     if (checkErr) {
@@ -172,7 +175,6 @@ app.post("/profile_setup", authenticateToken, (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     } else {
       if (checkResult && checkResult.length > 0) {
-        // Profile data exists, perform an UPDATE operation
         const updateQuery = "UPDATE admin_profile SET ? WHERE uid = ?";
         connection.query(
           updateQuery,
@@ -188,7 +190,6 @@ app.post("/profile_setup", authenticateToken, (req, res) => {
           }
         );
       } else {
-        // Profile data doesn't exist, perform an INSERT operation
         const insertQuery = "INSERT INTO admin_profile SET ?";
         connection.query(insertQuery, formData, (insertErr, insertResult) => {
           if (insertErr) {
@@ -210,8 +211,9 @@ app.post("/profile_setup", authenticateToken, (req, res) => {
 });
 
 //Add Post
-app.post("/add_posts", authenticateToken, (req, res) => {
+app.post("/add_posts", authenticateToken, async (req, res) => {
   const formData = req.body;
+
   const insertQuery = "INSERT INTO add_posts SET ?";
   connection.query(insertQuery, formData, (err, result) => {
     if (err) {
@@ -224,12 +226,49 @@ app.post("/add_posts", authenticateToken, (req, res) => {
   });
 });
 
+// Edit Post (GET)
+app.get("/edit_post/:post_id", authenticateToken, (req, res) => {
+  const postID = req.params.post_id;
+
+  const getPostQuery = "SELECT * FROM add_posts WHERE posts_id = ?";
+  connection.query(getPostQuery, [postID], (err, postResult) => {
+    if (err) {
+      console.error("Error fetching post data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      const postData = postResult[0];
+      if (!postData) {
+        res.status(404).json({ error: "Post not found" });
+      } else {
+        res.status(200).json(postData);
+      }
+    }
+  });
+});
+
+// Edit Post (PUT)
+app.put("/edit_post/:post_id", authenticateToken, (req, res) => {
+  const postID = req.params.post_id;
+  const formData = req.body;
+
+  const updateQuery = "UPDATE add_posts SET ? WHERE posts_id = ?";
+  connection.query(updateQuery, [formData, postID], (err, result) => {
+    if (err) {
+      console.error("Error updating post:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      console.log("Post updated successfully");
+      res.status(200).json({ message: "Post Updated Successfully" });
+    }
+  });
+});
+
 // Route to get dashboard data
 app.get("/get_admin_data", authenticateToken, (req, res) => {
   const uid = req.query.uid;
   const adminId = req.query.admin_id;
   const adminDataQuery =
-    "SELECT CONVERT(profile_img USING utf8) AS profile_img, college_name, contact, email FROM admin_profile WHERE uid = ? AND admin_id = ?";
+    "SELECT profile_img, college_name, contact, email FROM admin_profile WHERE uid = ? AND admin_id = ?";
   connection.query(adminDataQuery, [uid, adminId], (err, adminDataResults) => {
     if (err) {
       console.error("Error fetching admin data:", err);
@@ -241,8 +280,24 @@ app.get("/get_admin_data", authenticateToken, (req, res) => {
   });
 });
 
+// Delete Post
+app.delete("/delete_post/:post_id", authenticateToken, (req, res) => {
+  const postID = req.params.post_id;
+
+  const deleteQuery = "DELETE FROM add_posts WHERE posts_id = ?";
+  connection.query(deleteQuery, [postID], (err, result) => {
+    if (err) {
+      console.error("Error deleting post:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      console.log("Post deleted successfully");
+      res.status(200).json({ message: "Post Deleted Successfully" });
+    }
+  });
+});
+
 // Route to get posts
-app.get("/get_posts", authenticateToken, (req, res) => {
+app.get("/get_posts", (req, res) => {
   const uid = req.query.uid;
   const adminID = req.query.admin_id;
   const postsQuery = "SELECT * FROM add_posts WHERE uid = ? AND admin_id = ?";
@@ -252,15 +307,7 @@ app.get("/get_posts", authenticateToken, (req, res) => {
       console.error("Error fetching posts:", err);
       res.status(500).json({ error: "Internal Server Error" });
     } else {
-      // Modify each post object to include the cover_img URL
-      const postsWithUrls = postsResults.map((post) => ({
-        ...post,
-        cover_img: `http://yourserver.com/images/${encodeURIComponent(
-          post.cover_img
-        )}`,
-      }));
-
-      res.status(200).json(postsWithUrls);
+      res.status(200).json(postsResults);
     }
   });
 });

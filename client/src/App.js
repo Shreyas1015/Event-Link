@@ -5,6 +5,7 @@ import Dashboard from "./Pages/Dashboard";
 import AddPost from "./Pages/AddPost";
 import AdminProfile from "./Pages/AdminProfile";
 import SignUpPage from "./Pages/SignUpPage";
+import EditPost from "./Pages/EditPost";
 
 const App = () => {
   const [token, setToken] = useState("");
@@ -31,7 +32,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route
-            path="/login"
+            path="/"
             element={<LoginPage handleLogin={handleLogin} token={token} />}
           />
           <Route
@@ -49,6 +50,10 @@ const App = () => {
           <Route
             path="/addpost"
             element={<AddPost handleLogout={handleLogout} token={token} />}
+          />
+          <Route
+            path="/edit_post"
+            element={<EditPost handleLogout={handleLogout} token={token} />}
           />
         </Routes>
       </Router>

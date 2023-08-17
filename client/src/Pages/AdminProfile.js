@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation } from "react-router-dom";
 import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
 import axios from "axios";
@@ -56,7 +56,7 @@ const AdminProfile = ({ token }) => {
     e.preventDefault();
     try {
       const headers = {
-        Authorization: `Bearer ${token}`, // Send token in the headers
+        Authorization: `Bearer ${token}`,
       };
 
       const response = await axios.post(
@@ -91,7 +91,7 @@ const AdminProfile = ({ token }) => {
       }
     }
   };
-  // Check if the UID exists in the URL query parameter
+
   if (!uid) {
     return (
       <>
@@ -105,7 +105,6 @@ const AdminProfile = ({ token }) => {
     );
   }
 
-  // Check if the user is not logged in (based on token)
   if (!token) {
     return (
       <>
@@ -146,15 +145,13 @@ const AdminProfile = ({ token }) => {
               <h1>Hello , User</h1>
               <hr />
               <form onSubmit={handleSubmit}>
-                <input
-                  type="hidden"
-                  name="uid"
-                  value={formData.uid} // Use the UID from the URL query parameter
-                />
+                <input type="hidden" name="uid" value={formData.uid} />
                 <div className="mb-3">
                   <label
                     htmlFor="profile_img"
                     className="form-label fw-bolder "
+                    onChange={handleChange}
+                    value={formData.profile_img}
                   >
                     Profile Pic :
                   </label>

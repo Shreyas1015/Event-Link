@@ -8,12 +8,7 @@ const PostsCard = (props) => {
         <div className="card-body">
           <h5 className="card-title">{props.title}</h5>
           <p className="card-text">{props.desc}</p>
-          <a href="no" className="btn blue-buttons me-4">
-            {props.edit}
-          </a>
-          <a href="no" className="btn blue-buttons ms-4">
-            {props.delete}
-          </a>
+          <button className="btn blue-buttons me-4">{props.edit}</button>
         </div>
       </div>
     </>

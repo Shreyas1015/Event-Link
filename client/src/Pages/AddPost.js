@@ -11,7 +11,7 @@ const AddPost = ({ token }) => {
   const adminID = new URLSearchParams(location.search).get("admin_id");
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
-    cover_img: "", // Change initial value to null
+    cover_img: "",
     event_name: "",
     event_desc: "",
     category_id: "",
@@ -21,22 +21,6 @@ const AddPost = ({ token }) => {
     uid: uid,
     admin_id: adminID,
   });
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   if (name === "cover_img") {
-  //     setFormData((prevState) => ({
-  //       ...prevState,
-  //       [name]: e.target.files[0], // Store selected file object
-  //     }));
-  //   } else {
-  //     setFormData((prevState) => ({
-  //       ...prevState,
-  //       [name]: value,
-  //     }));
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,16 +34,16 @@ const AddPost = ({ token }) => {
     e.preventDefault();
     try {
       const headers = {
-        Authorization: `Bearer ${token}`, // Send token in the headers
+        Authorization: `Bearer ${token}`,
       };
-      console.log("Image URL:", formData.cover_img); // Log the image URL
+      console.log("Image URL:", formData.cover_img);
       await axios.post("http://localhost:5000/add_posts", formData, {
         headers,
       });
 
       alert("Post Added Successfully");
       setFormData({
-        cover_img: "", // Reset cover_img to null
+        cover_img: "",
         event_name: "",
         event_desc: "",
         category_id: "",
@@ -68,7 +52,6 @@ const AddPost = ({ token }) => {
         google_form_link: "",
       });
 
-      // Redirect to the dashboard after adding the post
       navigate(`/dashboard?uid=${uid}&admin_id=${adminID}`);
     } catch (error) {
       console.error(error);
@@ -126,15 +109,11 @@ const AddPost = ({ token }) => {
               <h1>Hello , User</h1>
               <hr />
               <form onSubmit={handleSubmit}>
-                <input
-                  type="hidden"
-                  name="uid"
-                  value={formData.uid} // Use the UID from the URL query parameter
-                />
+                <input type="hidden" name="uid" value={formData.uid} />
                 <input
                   type="hidden"
                   name="admin_id"
-                  value={formData.admin_id} // Use the UID from the URL query parameter
+                  value={formData.admin_id}
                 />
                 <div className="mb-3">
                   <label htmlFor="cover_img" className="form-label fw-bolder ">
@@ -189,7 +168,7 @@ const AddPost = ({ token }) => {
                     id="category_id"
                     required
                     onChange={handleChange}
-                    value={formData.category_id} // Set the selected value using the state value
+                    value={formData.category_id}
                     aria-label="Default select example"
                   >
                     <option value="">Open this select menu</option>

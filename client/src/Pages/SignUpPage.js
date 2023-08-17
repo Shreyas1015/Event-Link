@@ -44,7 +44,7 @@ const SignUpPage = ({ handleLogin, token }) => {
       });
       handleLogin(res.data.token);
 
-      navigate(`/login`); // Pass uid as query parameter
+      navigate(`/`);
       alert("Signed Up Successfully");
     } catch (error) {
       console.error(error);

@@ -26,7 +26,7 @@ const AdminSidebar = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
     alert("Logged Out Successfully");
   };
 

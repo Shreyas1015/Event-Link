@@ -31,8 +31,8 @@ const LoginPage = ({ handleLogin, token }) => {
         password: formData.password,
       });
       handleLogin(res.data.token);
-      const userId = res.data.uid; // Get the uid from the response
-      navigate(`/adminprofile?uid=${userId}`); // Pass uid as query parameter
+      const userId = res.data.uid;
+      navigate(`/adminprofile?uid=${userId}`);
       alert("Logged In Successfully");
     } catch (error) {
       console.error(error);
@@ -92,21 +92,6 @@ const LoginPage = ({ handleLogin, token }) => {
                     value={formData.email}
                   />
                 </div>
-                {/* <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    className="form-control"
-                    id="password"
-                    placeholder="At least 8-20 charac."
-                    required
-                    onChange={handleChange}
-                    value={formData.password}
-                  />
-                </div> */}
                 <div className="mb-3">
                   <label htmlFor="password" className="form-label">
                     Password
