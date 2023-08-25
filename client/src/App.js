@@ -6,6 +6,9 @@ import AddPost from "./Pages/AddPost";
 import AdminProfile from "./Pages/AdminProfile";
 import SignUpPage from "./Pages/SignUpPage";
 import EditPost from "./Pages/EditPost";
+import UserProfile from "./Pages/UserProfile";
+import UserDashboard from "./Pages/UserDashboard";
+import ShowPost from "./Pages/ShowPost";
 
 const App = () => {
   const [token, setToken] = useState("");
@@ -39,13 +42,37 @@ const App = () => {
             path="/signup"
             element={<SignUpPage handleLogin={handleLogin} token={token} />}
           />
-          <Route
-            path="/adminprofile"
-            element={<AdminProfile handleLogout={handleLogout} token={token} />}
-          />
+          {localStorage.getItem("user_type") == 1 ? (
+            <Route
+              path="/adminprofile"
+              element={
+                <AdminProfile handleLogout={handleLogout} token={token} />
+              }
+            />
+          ) : localStorage.getItem("user_type") == 2 ? (
+            <Route
+              path="/userprofile"
+              element={
+                <UserProfile handleLogout={handleLogout} token={token} />
+              }
+            />
+          ) : (
+            <h2>No</h2>
+          )}
+
           <Route
             path="/dashboard"
             element={<Dashboard handleLogout={handleLogout} token={token} />}
+          />
+          <Route
+            path="/userdashboard"
+            element={
+              <UserDashboard handleLogout={handleLogout} token={token} />
+            }
+          />
+          <Route
+            path="/show_post"
+            element={<ShowPost handleLogout={handleLogout} token={token} />}
           />
           <Route
             path="/addpost"

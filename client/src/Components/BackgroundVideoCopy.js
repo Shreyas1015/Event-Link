@@ -1,6 +1,6 @@
 import React from "react";
 
-const BackgroundVideo = (props) => {
+const BackgroundVideoCopy = () => {
   return (
     <>
       <video
@@ -8,10 +8,11 @@ const BackgroundVideo = (props) => {
         autoPlay
         muted
         loop
+        style={{ width: "74%" }}
         src="/Images/videoplayback.webm"
       ></video>
     </>
   );
 };
 
-export default BackgroundVideo;
+export default BackgroundVideoCopy;

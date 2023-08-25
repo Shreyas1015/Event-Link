@@ -26,13 +26,23 @@ const LoginPage = ({ handleLogin, token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/login", {
+      const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
         email: formData.email,
         password: formData.password,
       });
       handleLogin(res.data.token);
       const userId = res.data.uid;
-      navigate(`/adminprofile?uid=${userId}`);
+      const userType = res.data.user_type;
+      const IsLogin = res.data.isLogin;
+      localStorage.setItem("user_type", userType);
+      localStorage.setItem("is_login", IsLogin);
+      // eslint-disable-next-line eqeqeq
+      if (userType == 1) {
+        navigate(`/adminprofile?uid=${userId}`);
+        // eslint-disable-next-line eqeqeq
+      } else if (userType == 2) {
+        navigate(`/userprofile?uid=${userId}`);
+      }
       alert("Logged In Successfully");
     } catch (error) {
       console.error(error);
@@ -116,7 +126,9 @@ const LoginPage = ({ handleLogin, token }) => {
                     </button>
                   </div>
                 </div>
-                <span className="text-danger p-2">{errorMessage}</span>
+                <div className="mb-1">
+                  <h5 className="text-danger">{errorMessage}</h5>
+                </div>
                 <br />
                 <input
                   className="btn px-4 py-2"

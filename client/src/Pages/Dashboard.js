@@ -3,6 +3,7 @@ import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import BackgroundVideoCopy from "../Components/BackgroundVideoCopy";
 
 const Dashboard = ({ token }) => {
   const navigate = useNavigate();
@@ -69,9 +70,12 @@ const Dashboard = ({ token }) => {
         Authorization: `Bearer ${token}`,
       };
 
-      await axios.delete(`http://localhost:5000/delete_post/${postID}`, {
-        headers,
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_BASE_URL}/delete_post/${postID}`,
+        {
+          headers,
+        }
+      );
 
       setPosts((prevPosts) =>
         prevPosts.filter((post) => post.posts_id !== postID)
@@ -80,6 +84,7 @@ const Dashboard = ({ token }) => {
       console.error("Error deleting post:", error);
     }
   };
+
   if (!(uid && adminID)) {
     return (
       <>
@@ -118,21 +123,43 @@ const Dashboard = ({ token }) => {
             <AdminSidebar uid={uid} adminID={adminID} />
           </div>
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
+            <div className="containers" style={{ width: "100%" }}>
+              <BackgroundVideoCopy />
+            </div>
             <div className="container my-3">
-              <div className="dashboard-info">
-                {dashboardData.profile_img ? (
-                  <img
-                    src={dashboardData.profile_img}
-                    alt="Dashboard Title"
-                    className="dashboard-title-img"
-                    onError={() => console.log("Title Image Load Error")}
-                  />
-                ) : (
-                  <p>No title image available</p>
-                )}
-                <h3>{dashboardData.college_name}</h3>
-                <p>Contact: {dashboardData.contact}</p>
-                <p>Email: {dashboardData.email}</p>
+              {/* Dashboard Profile */}
+              <div className="dashboard-info dashboard-top-bin glassomorphic-effect rounded-4">
+                {/* <div className="container-fluid"> */}
+                <img
+                  className="img-fluid dashboard-background-img"
+                  src="/Images/ec9eeefc-739d-4dbe-98ec-7862d163050e.jpeg"
+                  alt=""
+                />
+                {/* </div> */}
+                <hr className="m-0 p-0" />
+                <div className="container-fluid profile-info text-end px-3 pt-3 pb-5">
+                  <h2 className="">
+                    {dashboardData.college_name.toUpperCase()}
+                  </h2>
+                  <p className="text-secondary">
+                    CONTACT: {dashboardData.contact}
+                  </p>
+                  <p className="text-secondary">EMAIL: {dashboardData.email}</p>
+                </div>
+                <div className="container">
+                  <div className="profile-img-container ">
+                    {dashboardData.profile_img ? (
+                      <img
+                        src={dashboardData.profile_img}
+                        alt="Dashboard Title"
+                        className="dashboard-title-img rounded-5"
+                        onError={() => console.log("Title Image Load Error")}
+                      />
+                    ) : (
+                      <p>No title image available</p>
+                    )}
+                  </div>
+                </div>
               </div>
               <hr />
               <h2>YOUR POSTS</h2>
@@ -142,16 +169,14 @@ const Dashboard = ({ token }) => {
                 ) : (
                   posts.map((post) => (
                     <div className="col-lg-4" key={post.posts_id}>
-                      <div className="card my-3" style={{ width: "18rem" }}>
+                      <div
+                        className="card my-4 mx-auto glassomorphic-effect"
+                        style={{ width: "20rem" }}
+                      >
                         {post.cover_img ? (
                           <img
                             src={post.cover_img}
-                            className="card-img-top img-fluid"
-                            style={{
-                              maxWidth: "100%",
-                              height: "17rem",
-                              objectFit: "contain",
-                            }}
+                            className="card-img-top img-fluid posts_cards"
                             alt="..."
                           />
                         ) : (
@@ -159,12 +184,33 @@ const Dashboard = ({ token }) => {
                         )}
 
                         <div className="card-body">
-                          <h5 className="card-title">{post.event_name}</h5>
+                          <h5
+                            className="card-sub-title"
+                            style={{
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            <span className="fw-bolder">EVENT NAME : </span>
+                            {post.event_name.toUpperCase()}
+                          </h5>
                           <p
                             className="card-text"
                             style={{ height: "3rem", overflow: "hidden" }}
                           >
-                            {post.event_desc}
+                            Description : {post.event_desc}
+                          </p>
+                          <p className="card-text">
+                            Date:{" "}
+                            {new Date(post.event_date).toLocaleDateString(
+                              "en-GB",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
                           </p>
                           <Link
                             to={`/edit_post?post_id=${post.posts_id}&admin_id=${post.admin_id}&uid=${post.uid}`}

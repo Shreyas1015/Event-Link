@@ -15,6 +15,7 @@ const EditPost = ({ token }) => {
   const [formData, setFormData] = useState({
     posts_id: postID,
     cover_img: "",
+    event_date: "",
     event_name: "",
     event_desc: "",
     category_id: "",
@@ -48,9 +49,13 @@ const EditPost = ({ token }) => {
         Authorization: `Bearer ${token}`,
       };
 
-      await axios.put(`http://localhost:5000/edit_post/${postID}`, formData, {
-        headers,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_BASE_URL}/edit_post/${postID}`,
+        formData,
+        {
+          headers,
+        }
+      );
 
       alert("Post Updated Successfully");
       navigate(`/dashboard?uid=${uid}&admin_id=${adminID}`);
@@ -79,6 +84,7 @@ const EditPost = ({ token }) => {
         setFormData({
           posts_id: postData.posts_id,
           cover_img: postData.cover_img,
+          event_date: postData.event_date,
           event_name: postData.event_name,
           event_desc: postData.event_desc,
           category_id: postData.category_id,
@@ -103,7 +109,7 @@ const EditPost = ({ token }) => {
         <div className="row">
           <div
             className="col-lg-3 col-md-3 col-sm-3 col-3 sidebar"
-            style={{ backgroundColor: "#272727", height: "110vh" }}
+            style={{ backgroundColor: "#272727", height: "auto" }}
           >
             <AdminSidebar />
           </div>
@@ -135,6 +141,20 @@ const EditPost = ({ token }) => {
                     id="event_name"
                     onChange={handleChange}
                     value={formData.event_name}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="event_date" className="form-label fw-bolder ">
+                    Event Date :
+                  </label>
+                  <input
+                    type="date"
+                    name="event_date"
+                    className="form-control admin-profile-inputs"
+                    id="event_date"
+                    required
+                    onChange={handleChange}
+                    value={formData.event_date}
                   />
                 </div>
                 <div className="form-floating mb-3">

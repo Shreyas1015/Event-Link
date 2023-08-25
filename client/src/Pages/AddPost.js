@@ -28,6 +28,7 @@ const AddPost = ({ token }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     cover_img: "",
+    event_date: "",
     event_name: "",
     event_desc: "",
     category_id: "",
@@ -70,13 +71,18 @@ const AddPost = ({ token }) => {
 
       const updatedFormData = { ...formData, cover_img: imageUrl };
 
-      await axios.post("http://localhost:5000/add_posts", updatedFormData, {
-        headers,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/add_posts`,
+        updatedFormData,
+        {
+          headers,
+        }
+      );
 
       alert("Post Added Successfully");
       setFormData({
         cover_img: "",
+        event_date: "",
         event_name: "",
         event_desc: "",
         category_id: "",
@@ -178,6 +184,20 @@ const AddPost = ({ token }) => {
                     required
                     onChange={handleChange}
                     value={formData.event_name}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="event_date" className="form-label fw-bolder ">
+                    Event Date :
+                  </label>
+                  <input
+                    type="date"
+                    name="event_date"
+                    className="form-control admin-profile-inputs"
+                    id="event_date"
+                    required
+                    onChange={handleChange}
+                    value={formData.event_date}
                   />
                 </div>
                 <div className="form-floating mb-3">
