@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackgroundVideo from "../Components/BackgroundVideo";
 
 const SignUpPage = ({ handleLogin, token }) => {
@@ -78,14 +78,14 @@ const SignUpPage = ({ handleLogin, token }) => {
           </div>
           <div className="col-lg-6 m-0 p-0">
             <form
-              className="glassomorphic-effect login-container mx-auto rounded-4"
+              className="glassomorphic-effect signup-container mx-auto rounded-4"
               onSubmit={handleSubmit}
             >
               <div className="text-center login-text pt-4 mx-auto mb-5">
                 <h1 className="mb-3">Sign Up</h1>
                 <i>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Recusandae, ducimus!
+                  "Connecting Minds, Bridging Futures: Your Hub for Technical,
+                  Social, Cultural, and Placement Events !!"
                 </i>
               </div>
               <div className="form-container pb-4 mx-auto">
@@ -160,6 +160,11 @@ const SignUpPage = ({ handleLogin, token }) => {
                   type="submit"
                   value="Sign Up"
                 />
+              </div>
+              <div className="text-center p-3 ">
+                <Link className="text-decoration-none blue-text" to="/">
+                  Already Have An Account ? Login Here
+                </Link>
               </div>
             </form>
           </div>

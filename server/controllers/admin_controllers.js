@@ -68,12 +68,12 @@ const adminProfileSetup = asyncHand((req, res) => {
 
 const addPosts = asyncHand(async (req, res) => {
   const formData = req.body;
-  const adminId = formData.admin_id; // Assuming you have admin_id in formData
-  const uid = formData.uid; // Assuming you have uid in formData
+  const adminId = formData.admin_id;
+  const uid = formData.uid;
 
   const insertQuery = `
-    INSERT INTO add_posts (cover_img, event_name, event_desc, event_date, category_id, contact, email, google_form_link, uid, admin_id, college_name)
-    SELECT '${formData.cover_img}', '${formData.event_name}', '${formData.event_desc}', '${formData.event_date}', ${formData.category_id}, '${formData.contact}', '${formData.email}', '${formData.google_form_link}', ${uid}, ${adminId}, ap.college_name
+    INSERT INTO add_posts (cover_img, event_name, event_desc, event_date, category_id, contact, email, google_form_link, venue, uid, admin_id, college_name)
+    SELECT '${formData.cover_img}', '${formData.event_name}', '${formData.event_desc}', '${formData.event_date}', ${formData.category_id}, '${formData.contact}', '${formData.email}', '${formData.google_form_link}','${formData.venue}', ${uid}, ${adminId}, ap.college_name
     FROM admin_profile ap
     WHERE ap.admin_id = ${adminId} AND ap.uid = ${uid};
   `;
@@ -85,6 +85,29 @@ const addPosts = asyncHand(async (req, res) => {
     } else {
       console.log("Data inserted successfully");
       res.status(200).json({ message: "Data Inserted Successfully" });
+    }
+  });
+});
+
+const feedBack = asyncHand(async (req, res) => {
+  const formData = req.body;
+  const adminId = formData.admin_id;
+  const uid = formData.uid;
+
+  const insertQuery = `
+    INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, admin_id)
+    SELECT '${formData.name}', '${formData.email}', '${formData.feedback_id}', '${formData.feedback_subject}', '${formData.feedback_desc}', '${formData.ratings}', '${formData.attachments}', '${formData.contact_preference_id}', ${uid}, ${adminId}
+    FROM admin_profile ap
+    WHERE ap.admin_id = ${adminId} AND ap.uid = ${uid};
+  `;
+
+  connection.query(insertQuery, (err, result) => {
+    if (err) {
+      console.error("Error Inserting Data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      console.log("FeeBack Submitted successfully");
+      res.status(200).json({ message: "FeeBack Submitted Successfully" });
     }
   });
 });
@@ -200,4 +223,5 @@ module.exports = {
   getAdminData,
   deletePosts,
   getAdminPosts,
+  feedBack,
 };

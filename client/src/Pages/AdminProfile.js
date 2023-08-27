@@ -166,7 +166,7 @@ const AdminProfile = ({ token }) => {
           {/* Sidebar */}
           <div
             className="col-lg-3 col-md-3 col-sm-3 col-3 sidebar"
-            style={{ backgroundColor: "#272727", height: "89.6vh" }}
+            style={{ backgroundColor: "#272727", height: "auto" }}
           >
             {/* My Profile */}
             <AdminSidebar />
@@ -194,14 +194,8 @@ const AdminProfile = ({ token }) => {
                     id="profile_img"
                     accept="image/*"
                     onChange={handleChange}
+                    required
                   />
-                  {formData.profile_img && (
-                    <img
-                      src={URL.createObjectURL(formData.profile_img)}
-                      alt="Profile Preview"
-                      style={{ maxWidth: "100%", marginTop: "10px" }}
-                    />
-                  )}
                 </div>
                 <div className="mb-3">
                   <label
@@ -217,6 +211,7 @@ const AdminProfile = ({ token }) => {
                     id="college_name"
                     onChange={handleChange}
                     value={formData.college_name}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -230,6 +225,7 @@ const AdminProfile = ({ token }) => {
                     id="email"
                     onChange={handleChange}
                     value={formData.email}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -244,6 +240,7 @@ const AdminProfile = ({ token }) => {
                     maxLength="10"
                     onChange={handleChange}
                     value={formData.contact}
+                    required
                   />
                 </div>
                 <div className="form-floating mb-3">
@@ -255,6 +252,7 @@ const AdminProfile = ({ token }) => {
                     style={{ height: 100 }}
                     onChange={handleChange}
                     value={formData.address}
+                    required
                   />
                   <label htmlFor="address">College Address</label>
                 </div>

@@ -15,13 +15,16 @@ const {
   deletePosts,
   particularPosts,
   getAdminPosts,
+  feedBack,
 } = require("./controllers/admin_controllers");
 const {
   userProfleID,
   userProfileSetup,
   userData,
   getAllPosts,
+  userFeedBack,
 } = require("./controllers/user_controllers");
+const { forgetPass, resetPass } = require("./controllers/otpControllers");
 
 const port = 5000;
 
@@ -106,6 +109,18 @@ app.get("/get_posts", authenticateToken, getAdminPosts);
 
 //TO Get all Posts
 app.get("/get_all_posts", authenticateToken, getAllPosts);
+
+//Forget Password
+app.post("/forget_password", forgetPass);
+
+//Reset Password
+app.post("/reset_password", resetPass);
+
+//Feedback
+app.post("/submit_feedback", feedBack);
+
+//User Feedback
+app.post("/submit_user_feedback", userFeedBack);
 
 app.listen(port, () => {
   console.log("Server Is Running on PORT :", port);

@@ -36,7 +36,7 @@ const AdminSidebar = () => {
       <ul className="m-4 p-0" style={{ listStyle: "none" }}>
         <Link className="text-decoration-none" to={`/adminprofile?uid=${uid}`}>
           <li className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3">
-            <i className="fa-solid fa-layer-group" /> My Profile
+            <i class="fa-solid fa-user fa-bounce me-2"></i> My Profile
           </li>
         </Link>
         {/* Render the Dashboard link only if adminID is available */}
@@ -46,7 +46,7 @@ const AdminSidebar = () => {
             to={`/dashboard?uid=${uid}&admin_id=${adminID}`}
           >
             <li className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3">
-              <i className="fa-solid fa-layer-group" /> Dashboard
+              <i class="fa-brands fa-windows fa-bounce me-2"></i> Dashboard
             </li>
           </Link>
         )}
@@ -57,7 +57,7 @@ const AdminSidebar = () => {
             to={`/addpost?uid=${uid}&admin_id=${adminID}`}
           >
             <li className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3">
-              <i className="fa-solid fa-layer-group" /> Add Post
+              <i class="fa-solid fa-file-export fa-bounce me-2"></i> Add Post
             </li>
           </Link>
         )}
@@ -65,8 +65,19 @@ const AdminSidebar = () => {
           className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3"
           onClick={handleLogout}
         >
-          <i className="fa-solid fa-arrow-right-from-bracket" /> Logout
+          <i className="fa-solid fa-arrow-right-from-bracket fa-bounce me-2" />
+          Logout
         </li>
+        {adminID && (
+          <Link
+            className="text-decoration-none"
+            to={`/admin_feedback?uid=${uid}&admin_id=${adminID}`}
+          >
+            <li className="py-3 px-3 sidebar-li mx-4 my-2 blue-buttons rounded-3 fixed-bottom report-li">
+              <i class="fa-solid fa-flag fa-bounce  ms-1 me-2"></i> Report / Feedback
+            </li>
+          </Link>
+        )}
       </ul>
     </>
   );

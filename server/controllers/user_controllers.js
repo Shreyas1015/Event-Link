@@ -102,9 +102,32 @@ const getAllPosts = asyncHand((req, res) => {
   });
 });
 
+const userFeedBack = asyncHand(async (req, res) => {
+  const formData = req.body;
+  const userProfileID = formData.user_profile_id;
+  const uid = formData.uid;
+
+  const insertQuery = `
+    INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, user_profile_id)
+    SELECT '${formData.name}', '${formData.email}', '${formData.feedback_id}', '${formData.feedback_subject}', '${formData.feedback_desc}', '${formData.ratings}', '${formData.attachments}', '${formData.contact_preference_id}', ${uid}, ${userProfileID}
+    FROM user_profile up
+    WHERE up.user_profile_id = ${userProfileID} AND up.uid = ${uid};
+  `;
+
+  connection.query(insertQuery, (err, result) => {
+    if (err) {
+      console.error("Error Inserting Data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      console.log("FeeBack Submitted successfully");
+      res.status(200).json({ message: "FeeBack Submitted Successfully" });
+    }
+  });
+});
 module.exports = {
   userProfleID,
   userData,
   getAllPosts,
   userProfileSetup,
+  userFeedBack,
 };

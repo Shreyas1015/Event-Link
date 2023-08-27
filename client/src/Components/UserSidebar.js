@@ -36,7 +36,7 @@ const UserSidebar = () => {
       <ul className="m-4 p-0" style={{ listStyle: "none" }}>
         <Link className="text-decoration-none" to={`/userprofile?uid=${uid}`}>
           <li className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3">
-            <i className="fa-solid fa-layer-group" /> My Profile
+            <i class="fa-solid fa-user fa-bounce me-2"></i> My Profile
           </li>
         </Link>
         {/* Render the Dashboard link only if UserProfileID is available */}
@@ -46,7 +46,7 @@ const UserSidebar = () => {
             to={`/userdashboard?uid=${uid}&user_profile_id=${UserProfileID}`}
           >
             <li className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3">
-              <i className="fa-solid fa-layer-group" /> Dashboard
+              <i class="fa-brands fa-windows fa-bounce me-2"></i> Dashboard
             </li>
           </Link>
         )}
@@ -55,8 +55,20 @@ const UserSidebar = () => {
           className="py-3 px-3 sidebar-li my-2 blue-buttons rounded-3"
           onClick={handleLogout}
         >
-          <i className="fa-solid fa-arrow-right-from-bracket" /> Logout
+          <i className="fa-solid fa-arrow-right-from-bracket fa-bounce me-2" />
+          Logout
         </li>
+        {UserProfileID && (
+          <Link
+            className="text-decoration-none"
+            to={`/user_feedback?uid=${uid}&user_profile_id=${UserProfileID}`}
+          >
+            <li className="py-3 px-3 sidebar-li mx-4 my-2 blue-buttons rounded-3 fixed-bottom report-li">
+              <i class="fa-solid fa-flag fa-bounce  ms-1 me-2"></i> Report /
+              Feedback
+            </li>
+          </Link>
+        )}
       </ul>
     </>
   );

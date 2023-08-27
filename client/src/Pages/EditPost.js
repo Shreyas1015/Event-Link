@@ -22,6 +22,7 @@ const EditPost = ({ token }) => {
     contact: "",
     email: "",
     google_form_link: "",
+    venue: "",
     uid: uid,
     admin_id: adminID,
   });
@@ -91,6 +92,7 @@ const EditPost = ({ token }) => {
           contact: postData.contact,
           email: postData.email,
           google_form_link: postData.google_form_link,
+          venue: postData.venue,
           uid: uid,
           admin_id: adminID,
         });
@@ -191,6 +193,20 @@ const EditPost = ({ token }) => {
                     <option value="3">Technical</option>
                     <option value="4">Placement</option>
                   </select>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="venue" className="form-label fw-bolder ">
+                    Event Venue :
+                  </label>
+                  <input
+                    type="text"
+                    name="venue"
+                    className="form-control admin-profile-inputs"
+                    id="venue"
+                    required
+                    onChange={handleChange}
+                    value={formData.venue}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="contact" className="form-label fw-bolder ">

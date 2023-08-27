@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: "Bree Serif", serif;
   letter-spacing: 1px;
+  scroll-behavior: smooth;
 }
 
 li:hover {
@@ -34,9 +35,16 @@ li:hover {
 
 .login-container {
   position: relative;
-  top: 21vh;
+  top: 17vh;
   width: 30vw;
 }
+
+.signup-container {
+  position: relative;
+  top: 8vh;
+  width: 30vw;
+}
+
 .form-container {
   width: 25vw;
 }
@@ -117,4 +125,12 @@ li:hover {
 
 .bordered-text {
   -webkit-text-stroke: 0.1px whitesmoke;
+}
+
+.report-li {
+  width: 21vw;
+}
+
+.star-size {
+  width: 3vw;
 }

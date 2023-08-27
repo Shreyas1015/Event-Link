@@ -193,14 +193,8 @@ const UserProfile = ({ token }) => {
                     id="profile_img"
                     accept="image/*"
                     onChange={handleChange}
+                    required
                   />
-                  {formData.profile_img && (
-                    <img
-                      src={URL.createObjectURL(formData.profile_img)}
-                      alt="Profile Preview"
-                      style={{ maxWidth: "100%", marginTop: "10px" }}
-                    />
-                  )}
                 </div>
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label fw-bolder ">
@@ -213,6 +207,7 @@ const UserProfile = ({ token }) => {
                     id="name"
                     onChange={handleChange}
                     value={formData.name}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -229,6 +224,7 @@ const UserProfile = ({ token }) => {
                     id="college_name"
                     onChange={handleChange}
                     value={formData.college_name}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -242,6 +238,7 @@ const UserProfile = ({ token }) => {
                     id="email"
                     onChange={handleChange}
                     value={formData.email}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -256,6 +253,7 @@ const UserProfile = ({ token }) => {
                     maxLength="10"
                     onChange={handleChange}
                     value={formData.contact}
+                    required
                   />
                 </div>
                 <div className="form-floating mb-3">
@@ -267,6 +265,7 @@ const UserProfile = ({ token }) => {
                     style={{ height: 100 }}
                     onChange={handleChange}
                     value={formData.clg_address}
+                    required
                   />
                   <label htmlFor="clg_address">College Address</label>
                 </div>

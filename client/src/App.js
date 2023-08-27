@@ -9,6 +9,10 @@ import EditPost from "./Pages/EditPost";
 import UserProfile from "./Pages/UserProfile";
 import UserDashboard from "./Pages/UserDashboard";
 import ShowPost from "./Pages/ShowPost";
+import ForgetPass from "./Pages/ForgetPass";
+import ResetPass from "./Pages/ResetPass";
+import Report from "./Pages/Report";
+import UserReport from "./Pages/UserReport";
 
 const App = () => {
   const [token, setToken] = useState("");
@@ -82,6 +86,16 @@ const App = () => {
             path="/edit_post"
             element={<EditPost handleLogout={handleLogout} token={token} />}
           />
+          <Route
+            path="/admin_feedback"
+            element={<Report handleLogout={handleLogout} token={token} />}
+          />
+          <Route
+            path="/user_feedback"
+            element={<UserReport handleLogout={handleLogout} token={token} />}
+          />
+          <Route path="/forgetPass" element={<ForgetPass />} />
+          <Route path="/resetPass" element={<ResetPass />} />
         </Routes>
       </Router>
     </>

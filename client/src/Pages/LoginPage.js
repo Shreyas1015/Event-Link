@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackgroundVideo from "../Components/BackgroundVideo";
 
 const LoginPage = ({ handleLogin, token }) => {
@@ -23,6 +23,7 @@ const LoginPage = ({ handleLogin, token }) => {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,8 +83,8 @@ const LoginPage = ({ handleLogin, token }) => {
               <div className="text-center login-text pt-4 mx-auto mb-5">
                 <h1 className="mb-3">Login</h1>
                 <i>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Recusandae, ducimus!
+                  "Connecting Minds, Bridging Futures: Your Hub for Technical,
+                  Social, Cultural, and Placement Events !!"
                 </i>
               </div>
               <div className="form-container pb-4 mx-auto">
@@ -130,12 +131,29 @@ const LoginPage = ({ handleLogin, token }) => {
                   <h5 className="text-danger">{errorMessage}</h5>
                 </div>
                 <br />
-                <input
-                  className="btn px-4 py-2"
-                  style={{ backgroundColor: "#62c1bf", color: "white" }}
-                  type="submit"
-                  value="Login"
-                />
+                <div className="row">
+                  <div className="col-lg-6">
+                    <input
+                      className="btn px-4 py-2"
+                      style={{ backgroundColor: "#62c1bf", color: "white" }}
+                      type="submit"
+                      value="Login"
+                    />
+                  </div>
+                  <div className="col-lg-6 p-1 text-center">
+                    <Link
+                      className="text-decoration-none blue-text "
+                      to="/forgetPass"
+                    >
+                      Forgot Password ?
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center p-3 ">
+                <Link className="text-decoration-none blue-text" to="/signup">
+                  Don't Have An Account ? SignUp Here
+                </Link>
               </div>
             </form>
           </div>

@@ -21,6 +21,7 @@ const ShowPost = ({ token }) => {
     contact: "",
     email: "",
     google_form_link: "",
+    venue: "",
   });
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const ShowPost = ({ token }) => {
           contact: postData.contact,
           email: postData.email,
           google_form_link: postData.google_form_link,
+          venue: postData.venue,
         });
       } catch (error) {
         console.error("Error fetching post data:", error);
@@ -92,23 +94,21 @@ const ShowPost = ({ token }) => {
                     {/* Desc */}
                     <div className="form-floating">
                       <p>
-                        <span className="fw-bolder fs-5 blue-text">
+                        <span className="fw-semibold fs-5 blue-text">
                           Event Desc :{" "}
                         </span>
-                        " Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Animi perspiciatis doloremque omnis nihil! Autem,
-                        reprehenderit. Esse adipisci eaque eveniet sint?
-                        Mollitia debitis modi fugiat alias quae reiciendis
-                        ratione doloremque, culpa voluptatibus non, quia
-                        asperiores velit beatae repudiandae eligendi doloribus
-                        minima tempora dolorem eius assumenda. Necessitatibus
-                        temporibus odio ab veritatis rem impedit voluptatem!
-                        Tempore, excepturi voluptatibus. {formData.event_desc} "
+                        " {formData.event_desc} "
                       </p>
                     </div>
                   </div>
                   <div className="col-lg-6 ps-3 pe-5 py-2">
                     <div className="mb-3">
+                      <h5 className="blue-text fw-semibold">Event Venue : </h5>
+                      <p>{formData.venue}</p>
+                      <hr />
+                      <h5 className="blue-text fw-semibold">
+                        Contact Details :{" "}
+                      </h5>
                       <p>
                         "The upcoming event is scheduled to be held on the
                         specified date{" "}
@@ -140,12 +140,7 @@ const ShowPost = ({ token }) => {
 
                 {/* google_form_link  */}
                 <div className="mb-5 text-center">
-                  <h5
-                    className="mx-4 blue-text fw-semibold"
-                    // style={{
-                    //   filter: "drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5))",
-                    // }}
-                  >
+                  <h5 className="mx-4 blue-text fw-semibold">
                     {" "}
                     Kindly register for the event by using the following Google
                     Form link.{" "}
