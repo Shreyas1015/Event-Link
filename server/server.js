@@ -1,6 +1,5 @@
 const express = require("express");
 require("dotenv").config();
-const { connection } = require("./models/db_connection");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const JWTSecreteKey = require("./controllers/jwtToken");
@@ -16,6 +15,7 @@ const {
   particularPosts,
   getAdminPosts,
   feedBack,
+  getAdminProfileData,
 } = require("./controllers/admin_controllers");
 const {
   userProfleID,
@@ -23,8 +23,14 @@ const {
   userData,
   getAllPosts,
   userFeedBack,
+  getUserProfileData,
 } = require("./controllers/user_controllers");
 const { forgetPass, resetPass } = require("./controllers/otpControllers");
+
+const {
+  getAdminCount,
+  getUsersCount,
+} = require("./controllers/developer_controllers");
 
 const port = 5000;
 
@@ -121,6 +127,18 @@ app.post("/submit_feedback", feedBack);
 
 //User Feedback
 app.post("/submit_user_feedback", userFeedBack);
+
+//admin profile data
+app.get("/get_admin_profile_data", getAdminProfileData);
+
+//user profile data
+app.get("/get_user_profile_data", getUserProfileData);
+
+//Count of admins
+app.get("/get_no_of_admins", getAdminCount);
+
+//Count of users
+app.get("/get_no_of_users", getUsersCount);
 
 app.listen(port, () => {
   console.log("Server Is Running on PORT :", port);

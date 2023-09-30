@@ -213,6 +213,30 @@ const getAdminPosts = asyncHand((req, res) => {
   });
 });
 
+const getAdminProfileData = asyncHand((req, res) => {
+  const adminID = req.query.admin_id;
+
+  const getAdminProfileDataQuery = `
+    SELECT college_name, email, contact, address
+    FROM admin_profile
+    WHERE admin_id = ?
+  `;
+
+  connection.query(getAdminProfileDataQuery, [adminID], (err, result) => {
+    if (err) {
+      console.error("Error fetching admin profile data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      if (result && result.length > 0) {
+        const profileData = result[0];
+        res.status(200).json(profileData);
+      } else {
+        res.status(404).json({ error: "Admin profile data not found" });
+      }
+    }
+  });
+});
+
 module.exports = {
   adminProfileID,
   adminProfileSetup,
@@ -224,4 +248,5 @@ module.exports = {
   deletePosts,
   getAdminPosts,
   feedBack,
+  getAdminProfileData,
 };

@@ -124,10 +124,36 @@ const userFeedBack = asyncHand(async (req, res) => {
     }
   });
 });
+
+const getUserProfileData = asyncHand((req, res) => {
+  const userProfileID = req.query.user_profile_id;
+
+  const getUserProfileDataQuery = `
+    SELECT name, college_name, email, contact, clg_address
+    FROM user_profile
+    WHERE user_profile_id = ?
+  `;
+
+  connection.query(getUserProfileDataQuery, [userProfileID], (err, result) => {
+    if (err) {
+      console.error("Error fetching user profile data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      if (result && result.length > 0) {
+        const profileData = result[0];
+        res.status(200).json(profileData);
+      } else {
+        res.status(404).json({ error: "User profile data not found" });
+      }
+    }
+  });
+});
+
 module.exports = {
   userProfleID,
   userData,
   getAllPosts,
   userProfileSetup,
   userFeedBack,
+  getUserProfileData,
 };

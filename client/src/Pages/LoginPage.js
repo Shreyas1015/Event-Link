@@ -43,6 +43,9 @@ const LoginPage = ({ handleLogin, token }) => {
         // eslint-disable-next-line eqeqeq
       } else if (userType == 2) {
         navigate(`/userprofile?uid=${userId}`);
+        // eslint-disable-next-line eqeqeq
+      } else if (userType == 3) {
+        navigate(`/developerdashboard?uid=${userId}`);
       }
       alert("Logged In Successfully");
     } catch (error) {

@@ -6,7 +6,7 @@ const JWTSecreteKey = require("./jwtToken");
 
 // Login Form
 const login = asyncHand((req, res) => {
-  console.log("This is Called");
+  // console.log("This is Called");
   const { email, password } = req.body;
   const searchQuery = "SELECT * from users where email = ?";
   try {

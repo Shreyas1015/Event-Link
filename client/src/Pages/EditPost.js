@@ -3,7 +3,22 @@ import DasboardNavbar from "../Components/DasboardNavbar";
 import AdminSidebar from "../Components/AdminSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
+  authDomain: "event-link-b0613.firebaseapp.com",
+  projectId: "event-link-b0613",
+  storageBucket: "event-link-b0613.appspot.com",
+  messagingSenderId: "21608943759",
+  appId: "1:21608943759:web:b96c788f67bcab9ee720fa",
+  measurementId: "G-ZMGC41BPHD",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
 const EditPost = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,31 +43,40 @@ const EditPost = ({ token }) => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+
+    if (name === "cover_img" && files && files[0]) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check if cover_img is empty
-    if (!formData.cover_img) {
-      alert("Cover Img is required.");
-      return;
-    }
 
-    // Reset error message
-    setErrorMessage("");
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
 
+      const imageFile = formData.cover_img;
+      const imageRef = storage
+        .ref()
+        .child(`All_Posts_Images/${uid}_${imageFile.name}`);
+      await imageRef.put(imageFile, { contentType: "image/jpeg" });
+      const imageUrl = await imageRef.getDownloadURL();
+
+      const updatedFormData = { ...formData, cover_img: imageUrl };
       await axios.put(
         `${process.env.REACT_APP_BASE_URL}/edit_post/${postID}`,
-        formData,
+        updatedFormData,
         {
           headers,
         }
@@ -121,7 +145,12 @@ const EditPost = ({ token }) => {
               <hr />
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="cover_img" className="form-label fw-bolder">
+                  <label
+                    htmlFor="cover_img"
+                    className="form-label fw-bolder"
+                    value={formData.cover_img}
+                    onChange={handleChange}
+                  >
                     Cover Img :
                   </label>
                   <input
@@ -130,6 +159,8 @@ const EditPost = ({ token }) => {
                     className="form-control admin-profile-inputs"
                     id="cover_img"
                     onChange={handleChange}
+                    accept="image/*"
+                    required
                   />
                 </div>
                 <div className="mb-3">

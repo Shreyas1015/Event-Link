@@ -5,11 +5,10 @@ const nodemailer = require("nodemailer");
 
 // Create a transporter for sending emails using nodemailer
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
+  service: "gmail",
   auth: {
-    user: "anna.nolan0@ethereal.email",
-    pass: "zft1dvMA1hwykZ33ec",
+    user: "eventlink528@gmail.com",
+    pass: "glkvqsejfhwekvqd",
   },
 });
 

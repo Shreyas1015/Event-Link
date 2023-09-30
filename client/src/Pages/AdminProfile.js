@@ -71,6 +71,34 @@ const AdminProfile = ({ token }) => {
     }
   };
 
+  useEffect(() => {
+    async function fetchAdminProfileData() {
+      try {
+        // Fetch existing profile data using adminID
+        if (adminID) {
+          const response = await axios.get(
+            `http://localhost:5000/get_admin_profile_data?admin_id=${adminID}`
+          );
+
+          const profileData = response.data;
+
+          setFormData({
+            profile_img: profileData.profile_img,
+            uid: uid,
+            college_name: profileData.college_name,
+            email: profileData.email,
+            contact: profileData.contact,
+            address: profileData.address,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching admin profile data:", error);
+      }
+    }
+
+    fetchAdminProfileData();
+  }, [adminID, uid]);
+
   const BackToLogin = () => {
     navigate("/");
   };
@@ -153,7 +181,8 @@ const AdminProfile = ({ token }) => {
   const updateNote = (
     <div className="mb-3">
       <p className="text-info">
-        To Update Your Profile Fill out all the fields again and then Submit
+        To Update Your Profile Image please Fill out the Image field without
+        fail !!
       </p>
     </div>
   );

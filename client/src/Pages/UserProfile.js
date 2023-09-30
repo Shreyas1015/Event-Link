@@ -53,6 +53,35 @@ const UserProfile = ({ token }) => {
     fetchUserProfileID();
   }, [uid]);
 
+  useEffect(() => {
+    async function fetchUserProfileData() {
+      try {
+        // Fetch existing profile data using adminID
+        if (userProfileID) {
+          const response = await axios.get(
+            `http://localhost:5000/get_user_profile_data?user_profile_id=${userProfileID}`
+          );
+
+          const profileData = response.data;
+
+          setFormData({
+            profile_img: profileData.profile_img,
+            uid: uid,
+            name: profileData.name,
+            college_name: profileData.college_name,
+            email: profileData.email,
+            contact: profileData.contact,
+            clg_address: profileData.clg_address,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching admin profile data:", error);
+      }
+    }
+
+    fetchUserProfileData();
+  }, [userProfileID, uid]);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -153,7 +182,8 @@ const UserProfile = ({ token }) => {
   const updateNote = (
     <div className="mb-3">
       <p className="text-info">
-        To Update Your Profile Fill out all the fields again and then Submit
+        To Update Your Profile Image please Fill out the Image field without
+        fail !!
       </p>
     </div>
   );

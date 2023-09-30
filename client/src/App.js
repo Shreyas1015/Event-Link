@@ -13,9 +13,10 @@ import ForgetPass from "./Pages/ForgetPass";
 import ResetPass from "./Pages/ResetPass";
 import Report from "./Pages/Report";
 import UserReport from "./Pages/UserReport";
+import DeveloperDashboard from "./Pages/Developer/DeveloperDashboard";
 
 const App = () => {
-  const [token, setToken] = useState("");
+  const [token, setToken, handleSearch] = useState("");
 
   const handleLogin = (newToken) => {
     setToken(newToken);
@@ -60,13 +61,26 @@ const App = () => {
                 <UserProfile handleLogout={handleLogout} token={token} />
               }
             />
+          ) : localStorage.getItem("user_type") == 3 ? (
+            <Route
+              path="/developerdashboard"
+              element={
+                <DeveloperDashboard handleLogout={handleLogout} token={token} />
+              }
+            />
           ) : (
-            <h2>No</h2>
+            <h2>Please Login</h2>
           )}
 
           <Route
             path="/dashboard"
-            element={<Dashboard handleLogout={handleLogout} token={token} />}
+            element={
+              <Dashboard
+                handleLogout={handleLogout}
+                token={token}
+                onSearch={handleSearch}
+              />
+            }
           />
           <Route
             path="/userdashboard"
