@@ -12,7 +12,15 @@
 li:hover {
   cursor: pointer;
 }
-/* color : #62c1bf */
+
+.text-blue {
+  color: #62c1bf;
+}
+
+.fixed-blue {
+  color: white;
+  background-color: #62c1bf;
+}
 /* #272727
 #444444 */
 /* glassomorphic-effect */
@@ -132,4 +140,32 @@ li:hover {
 
 .star-size {
   width: 3vw;
+}
+
+.nivo-legend-item text {
+  fill: white !important;
+}
+
+.admin-team-img {
+  object-fit: cover;
+  height: 12vh;
+  width: 6vw;
+}
+
+.table {
+  --bs-table-bg: transparent;
+}
+
+.table th {
+  color: white;
+  background-color: #62c1bf;
+}
+
+.table td,
+tr {
+  color: #62c1bf;
+}
+
+.table th {
+  padding: 0.5rem 1rem;
 }

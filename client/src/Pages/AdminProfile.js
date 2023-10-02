@@ -38,6 +38,8 @@ const AdminProfile = ({ token }) => {
     address: "",
   });
 
+  const storedToken = localStorage.getItem("token");
+
   useEffect(() => {
     async function fetchAdminID() {
       try {
@@ -74,10 +76,13 @@ const AdminProfile = ({ token }) => {
   useEffect(() => {
     async function fetchAdminProfileData() {
       try {
-        // Fetch existing profile data using adminID
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
         if (adminID) {
           const response = await axios.get(
-            `http://localhost:5000/get_admin_profile_data?admin_id=${adminID}`
+            `http://localhost:5000/get_admin_profile_data?admin_id=${adminID}`,
+            { headers }
           );
 
           const profileData = response.data;
@@ -97,7 +102,7 @@ const AdminProfile = ({ token }) => {
     }
 
     fetchAdminProfileData();
-  }, [adminID, uid]);
+  }, [storedToken, adminID, uid]);
 
   const BackToLogin = () => {
     navigate("/");

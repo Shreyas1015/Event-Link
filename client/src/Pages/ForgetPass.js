@@ -35,22 +35,6 @@ const ForgetPass = () => {
   };
 
   return (
-    // <div>
-    //   <h2>Forgot Password</h2>
-    //   <form onSubmit={handleForgotPassword}>
-    //     <div>
-    //       <label htmlFor="email">Email:</label>
-    //       <input
-    //         type="email"
-    //         id="email"
-    //         value={email}
-    //         onChange={handleEmailChange}
-    //         required
-    //       />
-    //     </div>
-
-    //   </form>
-    // </div>
     <div className="container-fluid">
       <BackgroundVideo />
       <div className="row">
@@ -58,7 +42,7 @@ const ForgetPass = () => {
           <img
             className="img-fluid"
             style={{ height: "100vh", objectFit: "cover" }}
-            src="/Images/Logo1.png"
+            src="/Images/Logo 1.png"
             alt=""
           />
         </div>

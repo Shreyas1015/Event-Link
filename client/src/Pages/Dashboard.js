@@ -10,7 +10,6 @@ const Dashboard = ({ token }) => {
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
   const adminID = new URLSearchParams(location.search).get("admin_id");
-  const [searchQuery, setSearchQuery] = useState("");
 
   console.log("Received Token:", token);
 
@@ -22,34 +21,6 @@ const Dashboard = ({ token }) => {
     contact: "",
     email: "",
   });
-
-  const handleSearch = (query) => {
-    console.log("Search Input:", query);
-    console.log("searchQuery:", searchQuery);
-    setSearchQuery(query);
-
-    const filteredPosts = posts.filter((post) => {
-      const eventNameMatch = post.event_name
-        .toLowerCase()
-        .includes(query.toLowerCase());
-      const eventDateMatch = new Date(post.event_date)
-        .toLocaleDateString("en-GB", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
-        .includes(query.toLowerCase());
-
-      console.log("Event Name Match:", eventNameMatch);
-      console.log("Event Date Match:", eventDateMatch);
-
-      return eventNameMatch || eventDateMatch;
-    });
-
-    console.log("Filtered Posts:", filteredPosts);
-
-    setPosts(filteredPosts);
-  };
 
   const storedToken = localStorage.getItem("token");
 
@@ -140,10 +111,9 @@ const Dashboard = ({ token }) => {
     );
   }
 
-
   return (
     <>
-      <DasboardNavbar onSearch={handleSearch} />
+      <DasboardNavbar />
       <div className="container-fluid">
         <div className="row">
           <div

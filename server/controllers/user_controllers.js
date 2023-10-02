@@ -90,7 +90,7 @@ const userData = asyncHand((req, res) => {
 });
 
 const getAllPosts = asyncHand((req, res) => {
-  const postsQuery = "SELECT * FROM add_posts";
+  const postsQuery = "SELECT * FROM add_posts ORDER BY POSTS_ID DESC ;";
 
   connection.query(postsQuery, (err, postsResults) => {
     if (err) {

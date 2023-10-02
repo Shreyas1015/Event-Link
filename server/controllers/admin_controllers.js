@@ -95,10 +95,21 @@ const feedBack = asyncHand(async (req, res) => {
   const uid = formData.uid;
 
   const insertQuery = `
-    INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, admin_id)
-    SELECT '${formData.name}', '${formData.email}', '${formData.feedback_id}', '${formData.feedback_subject}', '${formData.feedback_desc}', '${formData.ratings}', '${formData.attachments}', '${formData.contact_preference_id}', ${uid}, ${adminId}
-    FROM admin_profile ap
-    WHERE ap.admin_id = ${adminId} AND ap.uid = ${uid};
+  INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, admin_id, feedback_date)
+  SELECT 
+      '${formData.name}', 
+      '${formData.email}', 
+      '${formData.feedback_id}', 
+      '${formData.feedback_subject}', 
+      '${formData.feedback_desc}', 
+      '${formData.ratings}', 
+      '${formData.attachments}', 
+      '${formData.contact_preference_id}', 
+      ${uid}, 
+      ${adminId}, 
+      DATE(NOW())
+  FROM admin_profile ap
+  WHERE ap.admin_id = ${adminId} AND ap.uid = ${uid};
   `;
 
   connection.query(insertQuery, (err, result) => {

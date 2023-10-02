@@ -3,10 +3,16 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
-import DasboardNavbar from "../../Components/DasboardNavbar";
-import DeveloperSidebar from "../../Components/DeveloperSidebar";
+// import DasboardNavbar from "../../Components/DasboardNavbar";
+import DeveloperSidebar from "../../Components/Developer/DeveloperSidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import DeveloperCountBox from "../../Components/Developer/DeveloperCountBox";
+import RecentFeedbacks from "../../Components/Developer/RecentFeedbacks";
+import GraphCard from "../../Components/Developer/GraphCard";
+import TitleAndLogout from "../../Components/Developer/TitleAndLogout";
+// import LineGraph from "../../Components/LineGraph";
+// import BarGraph from "../../Components/BarGraph";
 // import UserSidebar from "../../Components/UserSidebar";
 
 const firebaseConfig = {
@@ -28,47 +34,109 @@ const DeveloperDashboard = ({ token }) => {
   console.log("UserId: ", uid);
   const [adminCount, setAdminCount] = useState(0);
   const [usersCount, setUsersCount] = useState(0);
+  const [postsCount, setPostsCount] = useState(0);
+  const [feedbackCount, setFeedbackCount] = useState(0);
 
-  async function fetchNoOfAdmins() {
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/get_no_of_admins`
-      );
-      if (res.status === 200) {
-        setAdminCount(res.data.adminCount);
-      } else {
-        console.error("Server Error:", res.data.message);
-        alert("Server Error");
-      }
-    } catch (error) {
-      console.error("Request Error:", error.message);
-      alert("Error in fetching data");
-    }
-  }
-
-  async function fetchNoOfUsers() {
-    console.log("fetching users");
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/get_no_of_users`
-      );
-      if (res.status === 200) {
-        setUsersCount(res.data.usersCount);
-      } else {
-        console.error("Server Error:", res.data.message);
-        alert("Server Error");
-      }
-    } catch (error) {
-      console.error("Request Error:", error.message);
-      alert("Error in fetching data");
-    }
-  }
+  const storedToken = localStorage.getItem("token");
 
   useEffect(() => {
+    const fetchNoOfAdmins = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/get_no_of_admins`,
+          { headers }
+        );
+        if (res.status === 200) {
+          setAdminCount(res.data.adminCount);
+        } else {
+          console.error("Server Error:", res.data.message);
+          alert("Server Error");
+        }
+      } catch (error) {
+        console.error("Request Error:", error.message);
+        alert("Error in fetching data");
+      }
+    };
+
+    const fetchNoOfPosts = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/get_no_of_posts`,
+          { headers }
+        );
+        if (res.status === 200) {
+          setPostsCount(res.data.postsCount);
+        } else {
+          console.error("Server Error:", res.data.message);
+          alert("Server Error");
+        }
+      } catch (error) {
+        console.error("Request Error:", error.message);
+        alert("Error in fetching data");
+      }
+    };
+
+    const fetchNoOfFeedback = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/get_no_of_feedbacks`,
+          { headers }
+        );
+        if (res.status === 200) {
+          setFeedbackCount(res.data.feedbackCount);
+        } else {
+          console.error("Server Error:", res.data.message);
+          alert("Server Error");
+        }
+      } catch (error) {
+        console.error("Request Error:", error.message);
+        alert("Error in fetching data");
+      }
+    };
+
+    const fetchNoOfUsers = async () => {
+      console.log("fetching users");
+      try {
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        const res = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/get_no_of_users`,
+          { headers }
+        );
+        if (res.status === 200) {
+          setUsersCount(res.data.usersCount);
+        } else {
+          console.error("Server Error:", res.data.message);
+          alert("Server Error");
+        }
+      } catch (error) {
+        console.error("Request Error:", error.message);
+        alert("Error in fetching data");
+      }
+    };
+
     fetchNoOfAdmins();
     fetchNoOfUsers();
-    console.log("Fetching Admin Count");
-  }, []);
+    fetchNoOfPosts();
+    fetchNoOfFeedback();
+    console.log("Fetching All Data Count");
+  }, [
+    storedToken,
+    setAdminCount,
+    setUsersCount,
+    setPostsCount,
+    setFeedbackCount,
+  ]);
 
   const BackToLogin = () => {
     navigate("/");
@@ -101,8 +169,7 @@ const DeveloperDashboard = ({ token }) => {
 
   return (
     <>
-      <DasboardNavbar />
-      <div className="container-fluid">
+      <div className="container-fluid" style={{ backgroundColor: "#272727" }}>
         <div className="row">
           <div
             className="col-lg-2 col-md-2 col-sm-3 col-3 sidebar"
@@ -112,12 +179,68 @@ const DeveloperDashboard = ({ token }) => {
             <DeveloperSidebar />
           </div>
           {/* Analysis */}
-          <div className="col-lg-9 col-md-9 col-sm-9 col-9">
-            <div className="container my-3">
-              <h1 className="fw-bolder">Dashboard</h1>
-              <hr />
-              <p>Total Admins: {adminCount}</p>
-              <p>Total Users: {usersCount}</p>
+          <div className="col-lg-10 col-md-9 col-sm-9 col-9">
+            <TitleAndLogout title="Dashboard" />
+            <hr className="my-3 p-0" style={{ color: "white" }} />
+            <div className="row my-3">
+              <div className="col-lg-3">
+                <DeveloperCountBox
+                  title="Total No. Of Admins"
+                  count={adminCount}
+                  status="+5 added"
+                />
+              </div>
+              <div className="col-lg-3">
+                <DeveloperCountBox
+                  title="Total No. Of Users"
+                  count={usersCount}
+                  status="+5 added"
+                />
+              </div>
+              <div className="col-lg-3">
+                <DeveloperCountBox
+                  title="Total No. Of Feedbacks"
+                  count={feedbackCount}
+                  status="+5 added"
+                />
+              </div>
+              <div className="col-lg-3">
+                <DeveloperCountBox
+                  title="Total No. Of Posts"
+                  count={postsCount}
+                  status="+5 added"
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-lg-8">
+                <div
+                  className="card glassomorphic-effect"
+                  style={{ height: "240px" }}
+                >
+                  <h4 className="card-header text-blue">Line Graph</h4>
+                  <div className="card-body p-0">
+                    {/* <LineGraph data={data1} /> */}
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <RecentFeedbacks />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-lg-4">
+                <div className="card glassomorphic-effect">
+                  <div className="card-header text-blue">Bar Graph</div>
+                  {/* <BarGraph data={data2} /> */}
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <GraphCard />
+              </div>
+              <div className="col-lg-4">
+                <GraphCard />
+              </div>
             </div>
           </div>
         </div>

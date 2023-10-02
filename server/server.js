@@ -30,7 +30,25 @@ const { forgetPass, resetPass } = require("./controllers/otpControllers");
 const {
   getAdminCount,
   getUsersCount,
+  getAllPostsCount,
+  getAllFeedbackCount,
+  getAdminTeamData,
+  deleteAdmin,
+  getIndividualAdminTeamData,
+  postIndividualAdminTeamData,
+  getUserTeamData,
+  deleteUser,
+  getIndividualUserTeamData,
+  postIndividualUserTeamData,
+  getAllClientData,
+  deleteClient,
+  addClient,
+  getAllFeedbacks,
+  getResolvedFeedbacks,
+  updateFeedback,
+  updateUserType,
 } = require("./controllers/developer_controllers");
+const { auth } = require("google-auth-library");
 
 const port = 5000;
 
@@ -129,16 +147,83 @@ app.post("/submit_feedback", feedBack);
 app.post("/submit_user_feedback", userFeedBack);
 
 //admin profile data
-app.get("/get_admin_profile_data", getAdminProfileData);
+app.get("/get_admin_profile_data", authenticateToken, getAdminProfileData);
 
 //user profile data
-app.get("/get_user_profile_data", getUserProfileData);
+app.get("/get_user_profile_data", authenticateToken, getUserProfileData);
 
 //Count of admins
-app.get("/get_no_of_admins", getAdminCount);
+app.get("/get_no_of_admins", authenticateToken, getAdminCount);
 
 //Count of users
-app.get("/get_no_of_users", getUsersCount);
+app.get("/get_no_of_users", authenticateToken, getUsersCount);
+
+//Count of posts
+app.get("/get_no_of_posts", authenticateToken, getAllPostsCount);
+
+//Count of feedbacks
+app.get("/get_no_of_feedbacks", authenticateToken, getAllFeedbackCount);
+
+//Admin Team Data
+app.get("/getAdminTeamData", authenticateToken, getAdminTeamData);
+
+// Delete Post
+app.delete("/delete_admin/:admin_id/:uid", authenticateToken, deleteAdmin);
+
+//Get Individual Admin Data
+app.get(
+  "/getIndividualAdminTeamData/:admin_id",
+  authenticateToken,
+  getIndividualAdminTeamData
+);
+
+//Uodate Individual Admin Data
+app.post(
+  "/postIndividualAdminTeamData",
+  authenticateToken,
+  postIndividualAdminTeamData
+);
+
+//User Team Data
+app.get("/getUserTeamData", authenticateToken, getUserTeamData);
+
+// Delete Post
+app.delete("/delete_user/:user_profile_id/:uid", authenticateToken, deleteUser);
+
+//Get Individual User Data
+app.get(
+  "/getIndividualUserTeamData/:user_profile_id",
+  authenticateToken,
+  getIndividualUserTeamData
+);
+
+//Uodate Individual User Data
+app.post(
+  "/postIndividualUserTeamData",
+  authenticateToken,
+  postIndividualUserTeamData
+);
+
+//User Team Data
+app.get("/getAllClientData", authenticateToken, getAllClientData);
+
+// Delete Post
+app.delete("/delete_client/:uid", authenticateToken, deleteClient);
+
+//Add Client
+app.post("/add_client", authenticateToken, addClient);
+
+//get all feedbacks
+app.get("/get_all_feedbacks", authenticateToken, getAllFeedbacks);
+
+//get resolved feedbacks
+app.get("/get_resolved_feedbacks", authenticateToken, getResolvedFeedbacks);
+
+//update feedback
+app.put("/update_feedback/:fid", authenticateToken, updateFeedback);
+
+//update user type
+app.put("/update_user_type/:uid", authenticateToken, updateUserType);
 
 app.listen(port, () => {
   console.log("Server Is Running on PORT :", port);

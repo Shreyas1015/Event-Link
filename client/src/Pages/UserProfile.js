@@ -53,13 +53,18 @@ const UserProfile = ({ token }) => {
     fetchUserProfileID();
   }, [uid]);
 
+  const storedToken = localStorage.getItem("token");
+
   useEffect(() => {
     async function fetchUserProfileData() {
       try {
-        // Fetch existing profile data using adminID
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
         if (userProfileID) {
           const response = await axios.get(
-            `http://localhost:5000/get_user_profile_data?user_profile_id=${userProfileID}`
+            `http://localhost:5000/get_user_profile_data?user_profile_id=${userProfileID}`,
+            { headers }
           );
 
           const profileData = response.data;
@@ -80,7 +85,7 @@ const UserProfile = ({ token }) => {
     }
 
     fetchUserProfileData();
-  }, [userProfileID, uid]);
+  }, [storedToken, userProfileID, uid]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

@@ -74,7 +74,7 @@ const LoginPage = ({ handleLogin, token }) => {
             <img
               className="img-fluid"
               style={{ height: "100vh", objectFit: "cover" }}
-              src="/Images/Logo1.png"
+              src="/Images/Logo 1.png"
               alt=""
             />
           </div>

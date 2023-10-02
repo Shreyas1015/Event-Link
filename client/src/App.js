@@ -14,6 +14,15 @@ import ResetPass from "./Pages/ResetPass";
 import Report from "./Pages/Report";
 import UserReport from "./Pages/UserReport";
 import DeveloperDashboard from "./Pages/Developer/DeveloperDashboard";
+import AdminData from "./Pages/Developer/AdminsData";
+import EditAdminData from "./Pages/Developer/EditAdminData";
+import EditUserData from "./Pages/Developer/EditUserData";
+import UsersData from "./Pages/Developer/UsersData";
+import HandleClients from "./Pages/Developer/HandleClients";
+import AddClient from "./Pages/Developer/AddClient";
+import AllFeedbacks from "./Pages/Developer/AllFeedbacks";
+import ResolvedFeedbacks from "./Pages/Developer/ResolvedFeedbacks";
+// import HandleUser from "./Pages/Developer/HandleUser";
 
 const App = () => {
   const [token, setToken, handleSearch] = useState("");
@@ -33,7 +42,7 @@ const App = () => {
     if (storedToken) {
       setToken(storedToken);
     }
-  }, []);
+  }, [setToken]);
 
   return (
     <>
@@ -73,6 +82,52 @@ const App = () => {
           )}
 
           <Route
+            path="/developeradminteam"
+            element={<AdminData handleLogout={handleLogout} token={token} />}
+          />
+
+          <Route
+            path="/developeraddclient"
+            element={<AddClient handleLogout={handleLogout} token={token} />}
+          />
+
+          <Route
+            path="/developerfeedbacks"
+            element={<AllFeedbacks handleLogout={handleLogout} token={token} />}
+          />
+
+          <Route
+            path="/developerresolvedfeedbacks"
+            element={
+              <ResolvedFeedbacks handleLogout={handleLogout} token={token} />
+            }
+          />
+
+          <Route
+            path="/developerhandleclients"
+            element={
+              <HandleClients handleLogout={handleLogout} token={token} />
+            }
+          />
+
+          <Route
+            path="/developereditadmin"
+            element={
+              <EditAdminData handleLogout={handleLogout} token={token} />
+            }
+          />
+
+          <Route
+            path="/developeruserteam"
+            element={<UsersData handleLogout={handleLogout} token={token} />}
+          />
+
+          <Route
+            path="/developeredituser"
+            element={<EditUserData handleLogout={handleLogout} token={token} />}
+          />
+
+          <Route
             path="/dashboard"
             element={
               <Dashboard
@@ -109,6 +164,7 @@ const App = () => {
             element={<UserReport handleLogout={handleLogout} token={token} />}
           />
           <Route path="/forgetPass" element={<ForgetPass />} />
+
           <Route path="/resetPass" element={<ResetPass />} />
         </Routes>
       </Router>

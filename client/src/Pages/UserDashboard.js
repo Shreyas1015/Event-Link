@@ -112,13 +112,11 @@ const UserDashboard = ({ token }) => {
             <div className="container my-3">
               {/* Dashboard Profile */}
               <div className="dashboard-info dashboard-top-bin glassomorphic-effect rounded-4 my-5 ">
-                {/* <div className="container-fluid"> */}
                 <img
                   className="img-fluid dashboard-background-img"
                   src="/Images/ec9eeefc-739d-4dbe-98ec-7862d163050e.jpeg"
                   alt=""
                 />
-                {/* </div> */}
                 <hr />
                 <div className="container-fluid profile-info text-end px-3 pt-3 pb-5">
                   <h2 className="">{dashboardData.name.toUpperCase()}</h2>
