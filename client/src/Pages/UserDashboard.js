@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import DasboardNavbar from "../Components/DasboardNavbar";
-import UserSidebar from "../Components/UserSidebar";
+import UserSidebar from "../Components/Users/UserSidebar";
 import BackgroundVideoCopy from "../Components/BackgroundVideoCopy";
 
 const UserDashboard = ({ token }) => {

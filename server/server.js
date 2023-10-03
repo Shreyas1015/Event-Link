@@ -47,8 +47,10 @@ const {
   getResolvedFeedbacks,
   updateFeedback,
   updateUserType,
+  recentFeedbacks,
+  barGraph,
+  pieChart,
 } = require("./controllers/developer_controllers");
-const { auth } = require("google-auth-library");
 
 const port = 5000;
 
@@ -224,6 +226,15 @@ app.put("/update_feedback/:fid", authenticateToken, updateFeedback);
 
 //update user type
 app.put("/update_user_type/:uid", authenticateToken, updateUserType);
+
+//get recent feedbacks
+app.get("/get_recent_feedbacks", authenticateToken, recentFeedbacks);
+
+//bar graph
+app.get("/getBarGraph", authenticateToken, barGraph);
+
+//pie chart
+app.get("/getPieChart", authenticateToken, pieChart);
 
 app.listen(port, () => {
   console.log("Server Is Running on PORT :", port);

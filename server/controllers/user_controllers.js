@@ -108,8 +108,8 @@ const userFeedBack = asyncHand(async (req, res) => {
   const uid = formData.uid;
 
   const insertQuery = `
-    INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, user_profile_id)
-    SELECT '${formData.name}', '${formData.email}', '${formData.feedback_id}', '${formData.feedback_subject}', '${formData.feedback_desc}', '${formData.ratings}', '${formData.attachments}', '${formData.contact_preference_id}', ${uid}, ${userProfileID}
+    INSERT INTO feedback (name, email, feedback_id, feedback_subject, feedback_desc, ratings, attachments, contact_preference_id, uid, user_profile_id, feedback_date)
+    SELECT '${formData.name}', '${formData.email}', '${formData.feedback_id}', '${formData.feedback_subject}', '${formData.feedback_desc}', '${formData.ratings}', '${formData.attachments}', '${formData.contact_preference_id}', ${uid}, ${userProfileID} ,  DATE(NOW())
     FROM user_profile up
     WHERE up.user_profile_id = ${userProfileID} AND up.uid = ${uid};
   `;

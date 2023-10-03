@@ -1,114 +1,81 @@
-// install (please try to align the version of installed @nivo packages)
-// yarn add @nivo/bar
-import { ResponsiveBar } from "@nivo/bar";
+import React, { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import axios from "axios";
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
-const BarGraph = ({ data2 }) => (
-  <ResponsiveBar
-    data={data2}
-    keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-    indexBy="country"
-    margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-    padding={0.3}
-    valueScale={{ type: "linear" }}
-    indexScale={{ type: "band", round: true }}
-    colors={{ scheme: "nivo" }}
-    defs={[
-      {
-        id: "dots",
-        type: "patternDots",
-        background: "inherit",
-        color: "#38bcb2",
-        size: 4,
-        padding: 1,
-        stagger: true,
-      },
-      {
-        id: "lines",
-        type: "patternLines",
-        background: "inherit",
-        color: "#eed312",
-        rotation: -45,
-        lineWidth: 6,
-        spacing: 10,
-      },
-    ]}
-    fill={[
-      {
-        match: {
-          id: "fries",
-        },
-        id: "dots",
-      },
-      {
-        match: {
-          id: "sandwich",
-        },
-        id: "lines",
-      },
-    ]}
-    borderColor={{
-      from: "color",
-      modifiers: [["darker", 1.6]],
-    }}
-    axisTop={null}
-    axisRight={null}
-    axisBottom={{
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: "country",
-      legendPosition: "middle",
-      legendOffset: 32,
-    }}
-    axisLeft={{
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: "food",
-      legendPosition: "middle",
-      legendOffset: -40,
-    }}
-    labelSkipWidth={12}
-    labelSkipHeight={12}
-    labelTextColor={{
-      from: "color",
-      modifiers: [["darker", 1.6]],
-    }}
-    legends={[
-      {
-        dataFrom: "keys",
-        anchor: "bottom-right",
-        direction: "column",
-        justify: false,
-        translateX: 120,
-        translateY: 0,
-        itemsSpacing: 2,
-        itemWidth: 100,
-        itemHeight: 20,
-        itemDirection: "left-to-right",
-        itemOpacity: 0.85,
-        symbolSize: 20,
-        effects: [
-          {
-            on: "hover",
-            style: {
-              itemOpacity: 1,
-            },
-          },
-        ],
-      },
-    ]}
-    role="application"
-    ariaLabel="Nivo bar chart demo"
-    barAriaLabel={(e) =>
-      e.id + ": " + e.formattedValue + " in country: " + e.indexValue
+ChartJS.register(BarElement, CategoryScale, LinearScale);
+
+const BarGraph = () => {
+  const [barGraphData, setBarGraphData] = useState([]);
+  const storedToken = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/getBarGraph`,
+          { headers }
+        );
+        setBarGraphData(response.data.barGraph);
+      } catch (error) {
+        console.error("Error fetching bar graph data:", error);
+      }
+    };
+
+    fetchData();
+  }, [storedToken]);
+
+  const getColorForRating = (rating) => {
+    if (rating >= 4) {
+      return "rgba(0, 100, 100, 0.7)"; // Darker shade of teal
+    } else if (rating >= 3) {
+      return "rgba(150, 130, 0, 0.7)"; // Darker shade of gold
+    } else {
+      return "rgba(150, 0, 30, 0.7)"; // Darker shade of red
     }
-  />
-);
+  };
+
+  const data = {
+    labels: barGraphData.map((item) => item.ratings),
+    datasets: [
+      {
+        label: "App Rating Distributions",
+        data: barGraphData.map((item) => item.count),
+        backgroundColor: barGraphData.map((item) =>
+          getColorForRating(item.ratings)
+        ),
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    legend: {
+      labels: {
+        fontSize: 26,
+      },
+    },
+  };
+
+  return (
+    <>
+      <Bar data={data} options={options} height={150} />
+    </>
+  );
+};
 
 export default BarGraph;

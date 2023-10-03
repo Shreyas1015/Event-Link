@@ -85,8 +85,8 @@ li:hover {
 }
 
 .dashboard-title-img {
-  max-width: 15vw;
-  max-height: 50vh;
+  width: 15vw;
+  height: 50vh;
   object-fit: cover;
   position: absolute;
   top: 4vw;

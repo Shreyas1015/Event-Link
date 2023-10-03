@@ -11,6 +11,8 @@ import DeveloperCountBox from "../../Components/Developer/DeveloperCountBox";
 import RecentFeedbacks from "../../Components/Developer/RecentFeedbacks";
 import GraphCard from "../../Components/Developer/GraphCard";
 import TitleAndLogout from "../../Components/Developer/TitleAndLogout";
+import BarGraph from "../../Components/Developer/BarGraph";
+import PieChart from "../../Components/Developer/PieChart";
 // import LineGraph from "../../Components/LineGraph";
 // import BarGraph from "../../Components/BarGraph";
 // import UserSidebar from "../../Components/UserSidebar";
@@ -219,9 +221,7 @@ const DeveloperDashboard = ({ token }) => {
                   style={{ height: "240px" }}
                 >
                   <h4 className="card-header text-blue">Line Graph</h4>
-                  <div className="card-body p-0">
-                    {/* <LineGraph data={data1} /> */}
-                  </div>
+                  <div className="card-body p-0">{/* <BarGraph /> */}</div>
                 </div>
               </div>
               <div className="col-lg-4">
@@ -230,13 +230,15 @@ const DeveloperDashboard = ({ token }) => {
             </div>
             <div className="row mb-3">
               <div className="col-lg-4">
-                <div className="card glassomorphic-effect">
-                  <div className="card-header text-blue">Bar Graph</div>
-                  {/* <BarGraph data={data2} /> */}
-                </div>
+                <GraphCard />
               </div>
               <div className="col-lg-4">
-                <GraphCard />
+                <div className="card glassomorphic-effect">
+                  <div className="card-header text-blue">Bar Graph</div>
+                  <div className="card-body">
+                    <PieChart />
+                  </div>
+                </div>
               </div>
               <div className="col-lg-4">
                 <GraphCard />

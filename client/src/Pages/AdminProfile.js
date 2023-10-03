@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/AdminSidebar";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";

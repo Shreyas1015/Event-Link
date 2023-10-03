@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/AdminSidebar";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackgroundVideoCopy from "../Components/BackgroundVideoCopy";

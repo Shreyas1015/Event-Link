@@ -5,7 +5,7 @@ import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import RatingInput from "../Components/RatingInput";
-import UserSidebar from "../Components/UserSidebar";
+import UserSidebar from "../Components/Users/UserSidebar";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",

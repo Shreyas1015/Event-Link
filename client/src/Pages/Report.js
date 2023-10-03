@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/AdminSidebar";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import firebase from "firebase/compat/app";

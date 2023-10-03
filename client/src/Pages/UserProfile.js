@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import DasboardNavbar from "../Components/DasboardNavbar";
-import UserSidebar from "../Components/UserSidebar";
+import UserSidebar from "../Components/Users/UserSidebar";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
@@ -18,6 +18,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
+
 const UserProfile = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();

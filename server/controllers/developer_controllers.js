@@ -498,6 +498,59 @@ const updateUserType = asyncHand((req, res) => {
   });
 });
 
+const recentFeedbacks = asyncHand((req, res) => {
+  const query =
+    "SELECT name,feedback_id,ratings FROM feedback ORDER BY feedback_date DESC LIMIT 5;";
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.error("Internal Server error", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      console.log("Recent Feedback");
+      res.status(200).json({
+        message: "Recent Feedback",
+        feedbacks: result,
+      });
+    }
+  });
+});
+
+const barGraph = asyncHand((req, res) => {
+  const query =
+    "SELECT ratings, COUNT(*) as count FROM feedback GROUP BY ratings ORDER BY ratings DESC; ";
+
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.error("Internal Server error", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      console.log("Bar Graph");
+      res.status(200).json({
+        message: "Bar Graph",
+        barGraph: result,
+      });
+    }
+  });
+});
+
+const pieChart = asyncHand((req, res) => {
+  const query =
+    "SELECT ft.feedback_name, COUNT(f.feedback_id) as count FROM feedback_type ft LEFT JOIN feedback f ON ft.feedback_id = f.feedback_id GROUP BY ft.feedback_name; ";
+
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.error("Internal Server error", err);
+      res.status(500).json({ message: "Internal server error" });
+    } else {
+      console.log("Pie Chart");
+      res.status(200).json({
+        message: "pie Chart Graph",
+        pieChart: result,
+      });
+    }
+  });
+});
+
 module.exports = {
   getAdminCount,
   getUsersCount,
@@ -518,4 +571,7 @@ module.exports = {
   getResolvedFeedbacks,
   updateFeedback,
   updateUserType,
+  recentFeedbacks,
+  barGraph,
+  pieChart,
 };

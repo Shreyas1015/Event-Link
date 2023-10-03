@@ -117,7 +117,7 @@ const UsersData = ({ token }) => {
           {/* Analysis */}
           <div className="col-lg-2"></div>
           <div className="col-lg-10 col-md-9 col-sm-9 col-9 px-4">
-            <TitleAndLogout title="Admin Data" />
+            <TitleAndLogout title="Users Data" />
             <hr className="my-3 p-0" style={{ color: "white" }} />
 
             <div className="table-responsive container mt-2 p-3">
