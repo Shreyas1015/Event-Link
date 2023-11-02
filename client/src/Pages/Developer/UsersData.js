@@ -1,10 +1,11 @@
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import DeveloperSidebar from "../../Components/Developer/DeveloperSidebar";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import TitleAndLogout from "../../Components/Developer/TitleAndLogout";
+import * as XLSX from "xlsx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
@@ -30,6 +31,36 @@ const UsersData = ({ token }) => {
   };
 
   const storedToken = localStorage.getItem("token");
+
+  const handleDownload = async (format) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/getUserTeamData`,
+        { headers }
+      );
+
+      if (format === "csv") {
+        const csvData = response.data.csvData;
+        const blob = new Blob([csvData], { type: "text/csv" });
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "UserData.csv";
+        link.click();
+      } else if (format === "excel") {
+        const sheetData = response.data.userData;
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(sheetData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, "UserData");
+        XLSX.writeFile(workbook, "UserData.xlsx");
+      }
+    } catch (error) {
+      console.error("Error downloading user data:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,7 +150,18 @@ const UsersData = ({ token }) => {
           <div className="col-lg-10 col-md-9 col-sm-9 col-9 px-4">
             <TitleAndLogout title="Users Data" />
             <hr className="my-3 p-0" style={{ color: "white" }} />
-
+            <button
+              onClick={() => handleDownload("excel")}
+              className="btn blue-buttons mt-2 ms-3"
+            >
+              Download Excel
+            </button>
+            <button
+              onClick={() => handleDownload("csv")}
+              className="btn blue-buttons mt-2 mx-4"
+            >
+              Download CSV
+            </button>
             <div className="table-responsive container mt-2 p-3">
               <table
                 className="table text-center glassomorphic-effect table-bordered "

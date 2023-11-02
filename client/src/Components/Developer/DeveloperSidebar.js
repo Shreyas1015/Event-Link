@@ -48,7 +48,7 @@ const DeveloperSidebar = () => {
             to={`/developerhandleclients?uid=${uid}`}
           >
             <li className="py-2 px-3 my-1 text-blue rounded-3">
-              <i className="fa-solid fa-user me-2"></i> Add Data Form
+              <i className="fa-solid fa-user me-2"></i> Client Data
             </li>
           </Link>
           <Link
@@ -62,17 +62,26 @@ const DeveloperSidebar = () => {
         </ul>
         <h5 className="text-center py-3 fixed-blue ">Charts</h5>
         <ul className="mx-2 p-0" style={{ listStyle: "none" }}>
-          <Link className="text-decoration-none" to={`/developer?uid=${uid}`}>
+          <Link
+            className="text-decoration-none"
+            to={`/developerbargraph?uid=${uid}`}
+          >
             <li className="py-2 px-3 my-1 text-blue rounded-3">
               <i className="fa-solid fa-user me-2"></i> Bar Graph
             </li>
           </Link>
-          <Link className="text-decoration-none" to={`/developer?uid=${uid}`}>
+          <Link
+            className="text-decoration-none"
+            to={`/developerpiechart?uid=${uid}`}
+          >
             <li className="py-2 px-3 my-1 text-blue rounded-3">
               <i className="fa-solid fa-user me-2"></i> Pie Chart
             </li>
           </Link>
-          <Link className="text-decoration-none" to={`/developer?uid=${uid}`}>
+          <Link
+            className="text-decoration-none"
+            to={`/developerlinegraph?uid=${uid}`}
+          >
             <li className="py-2 px-3 my-1 text-blue rounded-3">
               <i className="fa-solid fa-user me-2"></i> Line Graph
             </li>

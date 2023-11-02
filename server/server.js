@@ -2,8 +2,8 @@ const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const JWTSecreteKey = require("./controllers/jwtToken");
-const { login, signUp } = require("./controllers/authController");
+const JWTSecreteKey = require("./src/utils/generateSecretKey");
+const { login, signUp } = require("./src/controllers/authController");
 const {
   adminProfileID,
   adminProfileSetup,
@@ -16,7 +16,7 @@ const {
   getAdminPosts,
   feedBack,
   getAdminProfileData,
-} = require("./controllers/admin_controllers");
+} = require("./src/controllers/admin_controllers");
 const {
   userProfleID,
   userProfileSetup,
@@ -24,8 +24,8 @@ const {
   getAllPosts,
   userFeedBack,
   getUserProfileData,
-} = require("./controllers/user_controllers");
-const { forgetPass, resetPass } = require("./controllers/otpControllers");
+} = require("./src/controllers/user_controllers");
+const { forgetPass, resetPass } = require("./src/controllers/otpControllers");
 
 const {
   getAdminCount,
@@ -50,46 +50,18 @@ const {
   recentFeedbacks,
   barGraph,
   pieChart,
-} = require("./controllers/developer_controllers");
-
+  lineChart,
+} = require("./src/controllers/developer_controllers");
+const authenticateToken = require("./src/middlewares/authMiddleware");
+const corsOptions = require("./src/middlewares/corsMiddleware");
 const port = 5000;
 
 const app = express();
 
 // MiddleWares
-const allowedOrigins = ["http://localhost:3000"];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
-// JWT authentication token
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  console.log("Received Token:", token); // Log received token
-
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  } else {
-    jwt.verify(token, JWTSecreteKey, (err, user) => {
-      if (err) {
-        console.log("Token Verification Error:", err);
-        return res.status(403).json({ error: "Forbidden" });
-      }
-      req.userID = user.userId;
-      next();
-    });
-  }
-}
 
 // Login Form
 app.post("/login", login);
@@ -186,7 +158,7 @@ app.post(
   postIndividualAdminTeamData
 );
 
-//User Team Data
+// User Team Data including Excel and CSV formats
 app.get("/getUserTeamData", authenticateToken, getUserTeamData);
 
 // Delete Post
@@ -199,7 +171,7 @@ app.get(
   getIndividualUserTeamData
 );
 
-//Uodate Individual User Data
+//Update Individual User Data
 app.post(
   "/postIndividualUserTeamData",
   authenticateToken,
@@ -235,6 +207,9 @@ app.get("/getBarGraph", authenticateToken, barGraph);
 
 //pie chart
 app.get("/getPieChart", authenticateToken, pieChart);
+
+//line chart
+app.get("/getLineChart", authenticateToken, lineChart);
 
 app.listen(port, () => {
   console.log("Server Is Running on PORT :", port);

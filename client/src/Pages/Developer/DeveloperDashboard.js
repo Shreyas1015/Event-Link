@@ -1,9 +1,4 @@
-// import axios from "axios";
-// import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import firebase from "firebase/compat/app";
-import "firebase/compat/storage";
-// import DasboardNavbar from "../../Components/DasboardNavbar";
 import DeveloperSidebar from "../../Components/Developer/DeveloperSidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,24 +6,9 @@ import DeveloperCountBox from "../../Components/Developer/DeveloperCountBox";
 import RecentFeedbacks from "../../Components/Developer/RecentFeedbacks";
 import GraphCard from "../../Components/Developer/GraphCard";
 import TitleAndLogout from "../../Components/Developer/TitleAndLogout";
-import BarGraph from "../../Components/Developer/BarGraph";
 import PieChart from "../../Components/Developer/PieChart";
-// import LineGraph from "../../Components/LineGraph";
-// import BarGraph from "../../Components/BarGraph";
-// import UserSidebar from "../../Components/UserSidebar";
+import LineGraph from "../../Components/Developer/LineGraph";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
-  authDomain: "event-link-b0613.firebaseapp.com",
-  projectId: "event-link-b0613",
-  storageBucket: "event-link-b0613.appspot.com",
-  messagingSenderId: "21608943759",
-  appId: "1:21608943759:web:b96c788f67bcab9ee720fa",
-  measurementId: "G-ZMGC41BPHD",
-};
-
-firebase.initializeApp(firebaseConfig);
-// const storage = firebase.storage();
 const DeveloperDashboard = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -221,7 +201,9 @@ const DeveloperDashboard = ({ token }) => {
                   style={{ height: "240px" }}
                 >
                   <h4 className="card-header text-blue">Line Graph</h4>
-                  <div className="card-body p-0">{/* <BarGraph /> */}</div>
+                  <div className="card-body p-0">
+                    <LineGraph />
+                  </div>
                 </div>
               </div>
               <div className="col-lg-4">
@@ -234,14 +216,19 @@ const DeveloperDashboard = ({ token }) => {
               </div>
               <div className="col-lg-4">
                 <div className="card glassomorphic-effect">
-                  <div className="card-header text-blue">Bar Graph</div>
+                  <div className="card-header text-blue">Pie Chart</div>
                   <div className="card-body">
                     <PieChart />
                   </div>
                 </div>
               </div>
               <div className="col-lg-4">
-                <GraphCard />
+                <div className="card glassomorphic-effect">
+                  <div className="card-header text-blue">Line Graph</div>
+                  <div className="card-body">
+                    <LineGraph />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

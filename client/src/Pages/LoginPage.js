@@ -33,10 +33,10 @@ const LoginPage = ({ handleLogin, token }) => {
       });
       handleLogin(res.data.token);
       const userId = res.data.uid;
+      console.log("userId:", userId);
       const userType = res.data.user_type;
-      const IsLogin = res.data.isLogin;
       localStorage.setItem("user_type", userType);
-      localStorage.setItem("is_login", IsLogin);
+
       // eslint-disable-next-line eqeqeq
       if (userType == 1) {
         navigate(`/adminprofile?uid=${userId}`);
@@ -62,6 +62,20 @@ const LoginPage = ({ handleLogin, token }) => {
     const userId = localStorage.getItem("userId");
     if (userId) {
       navigate(`/adminprofile?uid=${userId}`);
+    }
+  }
+
+  if (token) {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      navigate(`/userprofile?uid=${userId}`);
+    }
+  }
+
+  if (token) {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      navigate(`/developerdashboard?uid=${userId}`);
     }
   }
 

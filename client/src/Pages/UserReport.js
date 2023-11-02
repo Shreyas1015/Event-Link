@@ -30,15 +30,14 @@ const Report = ({ token }) => {
   );
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
-    // feedback table
     name: "",
     email: "",
-    feedback_id: "", //table feedback_type
+    feedback_id: "",
     feedback_subject: "",
     feedback_desc: "",
     ratings: "",
     attachments: "",
-    contact_preference_id: "", // table contact_preference_type
+    contact_preference_id: "",
     uid: uid,
     user_profile_id: userProfileID,
   });
@@ -87,15 +86,14 @@ const Report = ({ token }) => {
 
       alert("FeedBack Submitted Successfully");
       setFormData({
-        // feedback table
         name: "",
         email: "",
-        feedback_id: "", //table feedback_type
+        feedback_id: "",
         feedback_subject: "",
         feedback_desc: "",
         ratings: "",
         attachments: "",
-        contact_preference_id: "", // table contact_preference_type
+        contact_preference_id: "",
       });
 
       navigate(`/userdashboard?uid=${uid}&user_profile_id=${userProfileID}`);

@@ -56,13 +56,6 @@ const SignUpPage = ({ handleLogin, token }) => {
     }
   };
 
-  if (token) {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate(`/adminprofile?uid=${userId}`);
-    }
-  }
-
   return (
     <>
       <div className="container-fluid">

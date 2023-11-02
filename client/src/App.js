@@ -22,27 +22,39 @@ import HandleClients from "./Pages/Developer/HandleClients";
 import AddClient from "./Pages/Developer/AddClient";
 import AllFeedbacks from "./Pages/Developer/AllFeedbacks";
 import ResolvedFeedbacks from "./Pages/Developer/ResolvedFeedbacks";
-// import HandleUser from "./Pages/Developer/HandleUser";
+import Linegraph from "./Pages/Developer/LineGraph";
+import PieChart from "./Pages/Developer/PieChart";
+import BarGraph from "./Pages/Developer/BarGraph";
+import ErrorPage from "./Pages/ErrorPage";
 
 const App = () => {
   const [token, setToken, handleSearch] = useState("");
+  const [userType, setUserType] = useState(""); 
 
-  const handleLogin = (newToken) => {
+  const handleLogin = (newToken, newUserType) => {
     setToken(newToken);
+    setUserType(newUserType);
     window.localStorage.setItem("token", newToken);
+    window.localStorage.setItem("user_type", newUserType);
   };
 
   const handleLogout = () => {
     setToken("");
+    setUserType(""); // Clear userType
     window.localStorage.removeItem("token");
+    window.localStorage.removeItem("user_type");
   };
 
   useEffect(() => {
     const storedToken = window.localStorage.getItem("token");
+    const storedUserType = window.localStorage.getItem("user_type");
     if (storedToken) {
       setToken(storedToken);
     }
-  }, [setToken]);
+    if (storedUserType) {
+      setUserType(storedUserType);
+    }
+  }, [setToken, setUserType]);
 
   return (
     <>
@@ -78,7 +90,7 @@ const App = () => {
               }
             />
           ) : (
-            <h2>Please Login</h2>
+            <Route path="/errorpage" element={<ErrorPage />} />
           )}
 
           <Route
@@ -110,6 +122,18 @@ const App = () => {
             }
           />
 
+          <Route
+            path="/developerlinegraph"
+            element={<Linegraph handleLogout={handleLogout} token={token} />}
+          />
+          <Route
+            path="/developerpiechart"
+            element={<PieChart handleLogout={handleLogout} token={token} />}
+          />
+          <Route
+            path="/developerbargraph"
+            element={<BarGraph handleLogout={handleLogout} token={token} />}
+          />
           <Route
             path="/developereditadmin"
             element={

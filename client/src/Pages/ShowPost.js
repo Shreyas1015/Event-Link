@@ -104,7 +104,9 @@ const ShowPost = ({ token }) => {
                   <div className="col-lg-6 ps-3 pe-5 py-2">
                     <div className="mb-3">
                       <h5 className="blue-text fw-semibold">Event Venue : </h5>
-                      <p>{formData.venue}</p>
+                      <a href={formData.venue} target="blank">
+                        {formData.venue}
+                      </a>
                       <hr />
                       <h5 className="blue-text fw-semibold">
                         Contact Details :{" "}
