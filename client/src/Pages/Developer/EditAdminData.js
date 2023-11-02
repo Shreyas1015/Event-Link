@@ -70,7 +70,7 @@ const EditAdminData = ({ token }) => {
     if (name === "profile_img" && files && files[0]) {
       setAdminData((prevState) => ({
         ...prevState,
-        [name]: files[0], // This line should be corrected
+        [name]: files[0],
       }));
     } else {
       setAdminData((prevState) => ({
@@ -114,6 +114,7 @@ const EditAdminData = ({ token }) => {
       }
     }
   };
+  
   if (!uid) {
     return (
       <>

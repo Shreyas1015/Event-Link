@@ -1,9 +1,6 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import firebase from "firebase/compat/app";
+import { useLocation, useNavigate } from "react-router-dom";
 import "firebase/compat/storage";
 import DeveloperSidebar from "../../Components/Developer/DeveloperSidebar";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import TitleAndLogout from "../../Components/Developer/TitleAndLogout";
 import LineGraph from "../../Components/Developer/LineGraph";
 
@@ -11,14 +8,12 @@ const Linegraph = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
-  const [userData, setUserData] = useState([]);
+
   console.log("UserId: ", uid);
 
   const BackToLogin = () => {
     navigate("/");
   };
-
-  const storedToken = localStorage.getItem("token");
 
   if (!uid) {
     return (

@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import DasboardNavbar from "../Components/DasboardNavbar";
-import UserSidebar from "../Components/Users/UserSidebar";
-import BackgroundVideoCopy from "../Components/BackgroundVideoCopy";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
+import UserSidebar from "../../Components/Users/UserSidebar";
+import BackgroundVideoCopy from "../../Components/Common/BackgroundVideoCopy";
 
 const UserDashboard = ({ token }) => {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const UserDashboard = ({ token }) => {
         setDashboardData(dashboardResponse.data.userData);
 
         const postsResponse = await axios.get(
-          `http://localhost:5000/get_all_posts`,
+          `${process.env.REACT_APP_BASE_URL}/get_all_posts`,
           { headers }
         );
         console.log("Posts response:", postsResponse.data);

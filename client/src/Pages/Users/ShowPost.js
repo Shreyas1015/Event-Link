@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import DasboardNavbar from "../Components/DasboardNavbar";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-import UserSidebar from "../Components/Users/UserSidebar";
+import UserSidebar from "../../Components/Users/UserSidebar";
 
 const ShowPost = ({ token }) => {
   const location = useLocation();

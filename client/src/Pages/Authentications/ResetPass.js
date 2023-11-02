@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import BackgroundVideo from "../Components/BackgroundVideo";
+import BackgroundVideo from "../../Components/Common/BackgroundVideo";
 
 const ResetPass = () => {
   const location = useLocation();

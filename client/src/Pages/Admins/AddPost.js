@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
+import React, { useState } from "react";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
+import AdminSidebar from "../../Components/Admin/AdminSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import firebase from "firebase/compat/app";
@@ -19,16 +19,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const storage = firebase.storage();
-const EditPost = ({ token }) => {
+
+const AddPost = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
   const adminID = new URLSearchParams(location.search).get("admin_id");
-  const postID = new URLSearchParams(location.search).get("post_id");
-
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
-    posts_id: postID,
     cover_img: "",
     event_date: "",
     event_name: "",
@@ -36,8 +34,8 @@ const EditPost = ({ token }) => {
     category_id: "",
     contact: "",
     email: "",
-    google_form_link: "",
     venue: "",
+    google_form_link: "",
     uid: uid,
     admin_id: adminID,
   });
@@ -60,7 +58,6 @@ const EditPost = ({ token }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -74,59 +71,68 @@ const EditPost = ({ token }) => {
       const imageUrl = await imageRef.getDownloadURL();
 
       const updatedFormData = { ...formData, cover_img: imageUrl };
-      await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/edit_post/${postID}`,
+
+      await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/add_posts`,
         updatedFormData,
         {
           headers,
         }
       );
 
-      alert("Post Updated Successfully");
+      alert("Post Added Successfully");
+      setFormData({
+        cover_img: "",
+        event_date: "",
+        event_name: "",
+        event_desc: "",
+        category_id: "",
+        contact: "",
+        email: "",
+        google_form_link: "",
+        venue: "",
+      });
+
       navigate(`/dashboard?uid=${uid}&admin_id=${adminID}`);
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {
         setErrorMessage(error.response.data.error);
       } else {
-        setErrorMessage("An error occurred during post update.");
+        setErrorMessage("An error occurred during post addition.");
       }
     }
   };
 
-  useEffect(() => {
-    async function fetchPostData() {
-      try {
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
+  const BackToLogin = () => {
+    navigate("/");
+  };
 
-        const getPostUrl = `http://localhost:5000/edit_post/${postID}`;
+  if (!(uid && adminID)) {
+    return (
+      <>
+        <div className="container text-center fw-bold">
+          <h2>INVALID URL. Please provide a valid UID.</h2>
+          <button onClick={BackToLogin} className="btn blue-buttons">
+            Back to Login
+          </button>
+        </div>
+      </>
+    );
+  }
 
-        const postResponse = await axios.get(getPostUrl, { headers });
-
-        const postData = postResponse.data;
-        setFormData({
-          posts_id: postData.posts_id,
-          cover_img: postData.cover_img,
-          event_date: postData.event_date,
-          event_name: postData.event_name,
-          event_desc: postData.event_desc,
-          category_id: postData.category_id,
-          contact: postData.contact,
-          email: postData.email,
-          google_form_link: postData.google_form_link,
-          venue: postData.venue,
-          uid: uid,
-          admin_id: adminID,
-        });
-      } catch (error) {
-        console.error("Error fetching post data:", error);
-      }
-    }
-
-    fetchPostData();
-  }, [postID, token, uid, adminID]);
+  if (!token) {
+    return (
+      <>
+        <div className="container text-center fw-bold">
+          <h2>LOGIN TO ACCESS FURTHER</h2>
+          <button onClick={BackToLogin} className="btn blue-buttons">
+            Back to Login
+          </button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -141,30 +147,35 @@ const EditPost = ({ token }) => {
           </div>
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
             <div className="container my-3">
-              <h1>Edit Post</h1>
+              <h1>Add Posts</h1>
               <hr />
               <form onSubmit={handleSubmit}>
+                <input type="hidden" name="uid" value={formData.uid} />
+                <input
+                  type="hidden"
+                  name="admin_id"
+                  value={formData.admin_id}
+                />
                 <div className="mb-3">
                   <label
                     htmlFor="cover_img"
                     className="form-label fw-bolder"
-                    value={formData.cover_img}
                     onChange={handleChange}
+                    value={formData.cover_img}
                   >
-                    Cover Img :
+                    Cover Img:
                   </label>
                   <input
                     type="file"
                     name="cover_img"
                     className="form-control admin-profile-inputs"
                     id="cover_img"
-                    onChange={handleChange}
                     accept="image/*"
-                    required
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="event_name" className="form-label fw-bolder">
+                  <label htmlFor="event_name" className="form-label fw-bolder ">
                     Event Name :
                   </label>
                   <input
@@ -172,6 +183,7 @@ const EditPost = ({ token }) => {
                     name="event_name"
                     className="form-control admin-profile-inputs"
                     id="event_name"
+                    required
                     onChange={handleChange}
                     value={formData.event_name}
                   />
@@ -235,6 +247,7 @@ const EditPost = ({ token }) => {
                     className="form-control admin-profile-inputs"
                     id="venue"
                     required
+                    placeholder="Enter location (Google Maps URL)"
                     onChange={handleChange}
                     value={formData.venue}
                   />
@@ -292,7 +305,7 @@ const EditPost = ({ token }) => {
                   <input
                     type="submit"
                     className="btn blue-buttons admin-profile-inputs"
-                    value="Update"
+                    value="Submit"
                   />
                 </div>
               </form>
@@ -304,4 +317,4 @@ const EditPost = ({ token }) => {
   );
 };
 
-export default EditPost;
+export default AddPost;

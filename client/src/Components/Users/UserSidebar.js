@@ -12,13 +12,12 @@ const UserSidebar = () => {
     async function fetchUserProfileID() {
       try {
         const response = await axios.get(
-          `http://localhost:5000/get_user_profile_id?uid=${uid}`
+          `${process.env.REACT_APP_BASE_URL}/get_user_profile_id?uid=${uid}`
         );
         const fetchedUserProfileID = response.data.user_profile_id;
         setUserProfileID(fetchedUserProfileID);
       } catch (error) {
         console.error("Error fetching admin_id:", error);
-        // Handle error
       }
     }
     fetchUserProfileID();

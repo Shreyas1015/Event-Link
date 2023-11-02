@@ -50,7 +50,7 @@ const PieChart = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right", // Set the legend position to right
+        position: "right", 
         labels: {
           fontSize: 26,
         },

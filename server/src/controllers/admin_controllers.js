@@ -212,7 +212,8 @@ const deletePosts = asyncHand((req, res) => {
 const getAdminPosts = asyncHand((req, res) => {
   const uid = req.query.uid;
   const adminID = req.query.admin_id;
-  const postsQuery = "SELECT * FROM add_posts WHERE uid = ? AND admin_id = ?";
+  const postsQuery =
+    "SELECT * FROM add_posts WHERE uid = ? AND admin_id = ? ORDER BY POSTS_ID DESC";
 
   connection.query(postsQuery, [uid, adminID], (err, postsResults) => {
     if (err) {
@@ -226,9 +227,10 @@ const getAdminPosts = asyncHand((req, res) => {
 
 const getAdminProfileData = asyncHand((req, res) => {
   if (!req.user || !req.user.email) {
-    return res
+    res
       .status(401)
       .json({ message: "Unauthorized - Missing or invalid token" });
+    res.sendFile("/client/src/Pages/Authentications/ErrorPage.js");
   } else {
     const adminID = parseInt(req.query.admin_id);
     const authenticatedClientID = req.admin_id;

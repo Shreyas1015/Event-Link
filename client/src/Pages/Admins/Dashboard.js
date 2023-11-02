@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
+import AdminSidebar from "../../Components/Admin/AdminSidebar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import BackgroundVideoCopy from "../Components/BackgroundVideoCopy";
+import BackgroundVideoCopy from "../../Components/Common/BackgroundVideoCopy";
 
 const Dashboard = ({ token }) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Dashboard = ({ token }) => {
         };
 
         const dashboardResponse = await axios.get(
-          `http://localhost:5000/get_admin_data?uid=${uid}&admin_id=${adminID}`,
+          `${process.env.REACT_APP_BASE_URL}/get_admin_data?uid=${uid}&admin_id=${adminID}`,
           { headers }
         );
         console.log("Dashboard data response:", dashboardResponse.data);
@@ -42,7 +42,7 @@ const Dashboard = ({ token }) => {
         setDashboardData(dashboardResponse.data.adminData);
 
         const postsResponse = await axios.get(
-          `http://localhost:5000/get_posts?uid=${uid}&admin_id=${adminID}`,
+          `${process.env.REACT_APP_BASE_URL}/get_posts?uid=${uid}&admin_id=${adminID}`,
           { headers }
         );
         console.log("Posts response:", postsResponse.data);

@@ -12,7 +12,7 @@ const AdminSidebar = () => {
     async function fetchAdminID() {
       try {
         const response = await axios.get(
-          `http://localhost:5000/get_admin_id?uid=${uid}`
+          `${process.env.REACT_APP_BASE_URL}/get_admin_id?uid=${uid}`
         );
         const fetchedAdminID = response.data.admin_id;
         setAdminID(fetchedAdminID);

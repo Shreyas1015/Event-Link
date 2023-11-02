@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
+import UserSidebar from "../../Components/Users/UserSidebar";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
@@ -18,44 +17,76 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const storage = firebase.storage();
 
-const AdminProfile = ({ token }) => {
+const UserProfile = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
   console.log("UserId: ", uid);
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [adminID, setAdminID] = useState("");
+  const [userProfileID, setUserProfileID] = useState("");
   const [formData, setFormData] = useState({
     profile_img: "",
     uid: uid,
+    name: "",
     college_name: "",
     email: "",
     contact: "",
-    address: "",
+    clg_address: "",
   });
+
+  useEffect(() => {
+    async function fetchUserProfileID() {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/get_user_profile_id?uid=${uid}`
+        );
+        const fetchedUserProfileID = response.data.user_profile_id;
+        console.log("Fetched User Profile ID:", fetchedUserProfileID);
+        setUserProfileID(fetchedUserProfileID);
+        console.log("Response from API:", response.data);
+      } catch (error) {
+        console.error("Error fetching user_profile_id:", error);
+      }
+    }
+    fetchUserProfileID();
+  }, [uid]);
 
   const storedToken = localStorage.getItem("token");
 
   useEffect(() => {
-    async function fetchAdminID() {
+    async function fetchUserProfileData() {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/get_admin_id?uid=${uid}`
-        );
-        const fetchedAdminID = response.data.admin_id;
-        console.log("Fetched admin ID:", fetchedAdminID);
-        setAdminID(fetchedAdminID);
-        console.log("Response from API:", response.data);
+        const headers = {
+          Authorization: `Bearer ${storedToken}`,
+        };
+        if (userProfileID) {
+          const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/get_user_profile_data?user_profile_id=${userProfileID}`,
+            { headers }
+          );
+
+          const profileData = response.data;
+
+          setFormData({
+            profile_img: profileData.profile_img,
+            uid: uid,
+            name: profileData.name,
+            college_name: profileData.college_name,
+            email: profileData.email,
+            contact: profileData.contact,
+            clg_address: profileData.clg_address,
+          });
+        }
       } catch (error) {
-        console.error("Error fetching admin_id:", error);
+        console.error("Error fetching admin profile data:", error);
       }
     }
-    fetchAdminID();
-  }, [uid]);
+
+    fetchUserProfileData();
+  }, [storedToken, userProfileID, uid]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -72,37 +103,6 @@ const AdminProfile = ({ token }) => {
       }));
     }
   };
-
-  useEffect(() => {
-    async function fetchAdminProfileData() {
-      try {
-        const headers = {
-          Authorization: `Bearer ${storedToken}`,
-        };
-        if (adminID) {
-          const response = await axios.get(
-            `http://localhost:5000/get_admin_profile_data?admin_id=${adminID}`,
-            { headers }
-          );
-
-          const profileData = response.data;
-
-          setFormData({
-            profile_img: profileData.profile_img,
-            uid: uid,
-            college_name: profileData.college_name,
-            email: profileData.email,
-            contact: profileData.contact,
-            address: profileData.address,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching admin profile data:", error);
-      }
-    }
-
-    fetchAdminProfileData();
-  }, [storedToken, adminID, uid]);
 
   const BackToLogin = () => {
     navigate("/");
@@ -125,27 +125,30 @@ const AdminProfile = ({ token }) => {
       const updatedFormData = { ...formData, profile_img: imageUrl };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/profile_setup`,
+        `${process.env.REACT_APP_BASE_URL}/user_profile_setup`,
         updatedFormData,
         { headers }
       );
 
       alert("Profile SetUp Completed");
-      const newAdminID = response.data.admin_id;
+      const newuserProfileID = response.data.user_profile_id;
 
-      if (adminID) {
-        navigate(`/addpost?uid=${uid}&admin_id=${adminID}`);
+      if (userProfileID) {
+        navigate(`/userdashboard?uid=${uid}&user_profile_id=${userProfileID}`);
       } else {
-        setAdminID(newAdminID);
-        navigate(`/addpost?uid=${uid}&admin_id=${newAdminID}`);
+        setUserProfileID(newuserProfileID);
+        navigate(
+          `/userdashboard?uid=${uid}&user_profile_id=${newuserProfileID}`
+        );
       }
 
       setFormData({
+        name: "",
         profile_img: "",
         college_name: "",
         email: "",
         contact: "",
-        address: "",
+        clg_address: "",
       });
     } catch (error) {
       console.error(error);
@@ -169,7 +172,6 @@ const AdminProfile = ({ token }) => {
       </>
     );
   }
-
   if (!token) {
     return (
       <>
@@ -191,7 +193,6 @@ const AdminProfile = ({ token }) => {
       </p>
     </div>
   );
-
   return (
     <>
       <DasboardNavbar />
@@ -203,7 +204,7 @@ const AdminProfile = ({ token }) => {
             style={{ backgroundColor: "#272727", height: "auto" }}
           >
             {/* My Profile */}
-            <AdminSidebar />
+            <UserSidebar />
           </div>
           {/* Analysis */}
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
@@ -228,6 +229,20 @@ const AdminProfile = ({ token }) => {
                     id="profile_img"
                     accept="image/*"
                     onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="name" className="form-label fw-bolder ">
+                    Full Name :
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="form-control admin-profile-inputs"
+                    id="name"
+                    onChange={handleChange}
+                    value={formData.name}
                     required
                   />
                 </div>
@@ -279,16 +294,16 @@ const AdminProfile = ({ token }) => {
                 </div>
                 <div className="form-floating mb-3">
                   <textarea
-                    name="address"
+                    name="clg_address"
                     className="form-control admin-profile-inputs"
                     placeholder="Leave a comment here"
-                    id="address"
+                    id="clg_address"
                     style={{ height: 100 }}
                     onChange={handleChange}
-                    value={formData.address}
+                    value={formData.clg_address}
                     required
                   />
-                  <label htmlFor="address">College Address</label>
+                  <label htmlFor="clg_address">College Address</label>
                 </div>
                 {updateNote}
                 <div className="mb-3">
@@ -310,4 +325,4 @@ const AdminProfile = ({ token }) => {
   );
 };
 
-export default AdminProfile;
+export default UserProfile;

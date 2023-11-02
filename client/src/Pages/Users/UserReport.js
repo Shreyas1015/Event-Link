@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import DasboardNavbar from "../Components/DasboardNavbar";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
+import DasboardNavbar from "../../Components/Common/DasboardNavbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
-import RatingInput from "../Components/RatingInput";
+import RatingInput from "../../Components/Common/RatingInput";
+import UserSidebar from "../../Components/Users/UserSidebar";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC3-kql5gHN8ZQRaFkrwWDBE8ksC5SbdAk",
@@ -25,20 +25,21 @@ const Report = ({ token }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const uid = new URLSearchParams(location.search).get("uid");
-  const adminID = new URLSearchParams(location.search).get("admin_id");
+  const userProfileID = new URLSearchParams(location.search).get(
+    "user_profile_id"
+  );
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
-    // feedback table
     name: "",
     email: "",
-    feedback_id: "", //table feedback_type
+    feedback_id: "",
     feedback_subject: "",
     feedback_desc: "",
     ratings: "",
     attachments: "",
-    contact_preference_id: "", // table contact_preference_type
+    contact_preference_id: "",
     uid: uid,
-    admin_id: adminID,
+    user_profile_id: userProfileID,
   });
 
   const handleChange = (e) => {
@@ -76,7 +77,7 @@ const Report = ({ token }) => {
       };
 
       await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/submit_feedback`,
+        `${process.env.REACT_APP_BASE_URL}/submit_user_feedback`,
         updatedFormData,
         {
           headers,
@@ -85,18 +86,17 @@ const Report = ({ token }) => {
 
       alert("FeedBack Submitted Successfully");
       setFormData({
-        // feedback table
         name: "",
         email: "",
-        feedback_id: "", //table feedback_type
+        feedback_id: "",
         feedback_subject: "",
         feedback_desc: "",
         ratings: "",
         attachments: "",
-        contact_preference_id: "", // table contact_preference_type
+        contact_preference_id: "",
       });
 
-      navigate(`/dashboard?uid=${uid}&admin_id=${adminID}`);
+      navigate(`/userdashboard?uid=${uid}&user_profile_id=${userProfileID}`);
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -111,7 +111,7 @@ const Report = ({ token }) => {
     navigate("/");
   };
 
-  if (!(uid && adminID)) {
+  if (!(uid && userProfileID)) {
     return (
       <>
         <div className="container text-center fw-bold">
@@ -146,7 +146,7 @@ const Report = ({ token }) => {
             className="col-lg-3 col-md-3 col-sm-3 col-3 sidebar"
             style={{ backgroundColor: "#272727", height: "auto" }}
           >
-            <AdminSidebar />
+            <UserSidebar />
           </div>
           <div className="col-lg-9 col-md-9 col-sm-9 col-9">
             <div className="container my-3">
@@ -155,11 +155,11 @@ const Report = ({ token }) => {
               <form onSubmit={handleSubmit}>
                 {/* uid */}
                 <input type="hidden" name="uid" value={formData.uid} />
-                {/* adminID */}
+                {/* userProfileID */}
                 <input
                   type="hidden"
-                  name="admin_id"
-                  value={formData.admin_id}
+                  name="user_profile_id"
+                  value={formData.user_profile_id}
                 />
                 {/* Name */}
                 <div className="mb-3">

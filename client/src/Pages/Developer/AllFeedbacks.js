@@ -67,7 +67,6 @@ const AllFeedbacks = ({ token }) => {
       console.log("Response from backend:", response.data);
       alert("Feedback Updated");
       window.location.reload();
-      // Update the feedbackData to mark the feedback as resolved
       setFeedbackData((prevFeedback) =>
         prevFeedback.map((feedback) =>
           feedback.fid === fid ? { ...feedback, resolved: 1 } : feedback
@@ -219,7 +218,7 @@ const AllFeedbacks = ({ token }) => {
                         <button
                           onClick={() => handleResolveClick(feedback.fid)}
                           className="btn blue-buttons mt-2"
-                          disabled={feedback.resolved === 1} // Disable button if feedback is already resolved
+                          disabled={feedback.resolved === 1}
                         >
                           Resolved
                         </button>

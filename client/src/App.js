@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./Pages/LoginPage";
-import Dashboard from "./Pages/Dashboard";
-import AddPost from "./Pages/AddPost";
-import AdminProfile from "./Pages/AdminProfile";
-import SignUpPage from "./Pages/SignUpPage";
-import EditPost from "./Pages/EditPost";
-import UserProfile from "./Pages/UserProfile";
-import UserDashboard from "./Pages/UserDashboard";
-import ShowPost from "./Pages/ShowPost";
-import ForgetPass from "./Pages/ForgetPass";
-import ResetPass from "./Pages/ResetPass";
-import Report from "./Pages/Report";
-import UserReport from "./Pages/UserReport";
+import LoginPage from "./Pages/Authentications/LoginPage";
+import Dashboard from "./Pages/Admins/Dashboard";
+import AddPost from "./Pages/Admins/AddPost";
+import AdminProfile from "./Pages/Admins/AdminProfile";
+import SignUpPage from "./Pages/Authentications/SignUpPage";
+import EditPost from "./Pages/Admins/EditPost";
+import UserProfile from "./Pages/Users/UserProfile";
+import UserDashboard from "./Pages/Users/UserDashboard";
+import ShowPost from "./Pages/Users/ShowPost";
+import ForgetPass from "./Pages/Authentications/ForgetPass";
+import ResetPass from "./Pages/Authentications/ResetPass";
+import Report from "./Pages/Common/Report";
+import UserReport from "./Pages/Users/UserReport";
 import DeveloperDashboard from "./Pages/Developer/DeveloperDashboard";
 import AdminData from "./Pages/Developer/AdminsData";
 import EditAdminData from "./Pages/Developer/EditAdminData";
@@ -25,11 +25,11 @@ import ResolvedFeedbacks from "./Pages/Developer/ResolvedFeedbacks";
 import Linegraph from "./Pages/Developer/LineGraph";
 import PieChart from "./Pages/Developer/PieChart";
 import BarGraph from "./Pages/Developer/BarGraph";
-import ErrorPage from "./Pages/ErrorPage";
+import ErrorPage from "./Pages/Authentications/ErrorPage";
 
 const App = () => {
   const [token, setToken, handleSearch] = useState("");
-  const [userType, setUserType] = useState(""); 
+  const [userType, setUserType] = useState("");
 
   const handleLogin = (newToken, newUserType) => {
     setToken(newToken);
@@ -40,7 +40,7 @@ const App = () => {
 
   const handleLogout = () => {
     setToken("");
-    setUserType(""); // Clear userType
+    setUserType("");
     window.localStorage.removeItem("token");
     window.localStorage.removeItem("user_type");
   };

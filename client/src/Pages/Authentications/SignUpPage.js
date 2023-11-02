@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import BackgroundVideo from "../Components/BackgroundVideo";
+import BackgroundVideo from "../../Components/Common/BackgroundVideo";
 
-const LoginPage = ({ handleLogin, token }) => {
+const SignUpPage = ({ handleLogin, token }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -24,60 +26,35 @@ const LoginPage = ({ handleLogin, token }) => {
     setShowPassword(!showPassword);
   };
 
+  const handleToggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
+      const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/signup`, {
         email: formData.email,
         password: formData.password,
       });
       handleLogin(res.data.token);
-      const userId = res.data.uid;
-      console.log("userId:", userId);
-      const userType = res.data.user_type;
-      localStorage.setItem("user_type", userType);
 
-      // eslint-disable-next-line eqeqeq
-      if (userType == 1) {
-        navigate(`/adminprofile?uid=${userId}`);
-        // eslint-disable-next-line eqeqeq
-      } else if (userType == 2) {
-        navigate(`/userprofile?uid=${userId}`);
-        // eslint-disable-next-line eqeqeq
-      } else if (userType == 3) {
-        navigate(`/developerdashboard?uid=${userId}`);
-      }
-      alert("Logged In Successfully");
+      navigate(`/`);
+      alert("Signed Up Successfully");
     } catch (error) {
       console.error(error);
       if (error.response && error.response.data && error.response.data.error) {
         setErrorMessage(error.response.data.error);
       } else {
-        setErrorMessage("An error occurred during login.");
+        setErrorMessage("An error occurred during sign up.");
       }
     }
   };
-
-  if (token) {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate(`/adminprofile?uid=${userId}`);
-    }
-  }
-
-  if (token) {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate(`/userprofile?uid=${userId}`);
-    }
-  }
-
-  if (token) {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate(`/developerdashboard?uid=${userId}`);
-    }
-  }
 
   return (
     <>
@@ -94,11 +71,11 @@ const LoginPage = ({ handleLogin, token }) => {
           </div>
           <div className="col-lg-6 m-0 p-0">
             <form
-              className="glassomorphic-effect login-container mx-auto rounded-4"
+              className="glassomorphic-effect signup-container mx-auto rounded-4"
               onSubmit={handleSubmit}
             >
               <div className="text-center login-text pt-4 mx-auto mb-5">
-                <h1 className="mb-3">Login</h1>
+                <h1 className="mb-3">Sign Up</h1>
                 <i>
                   "Connecting Minds, Bridging Futures: Your Hub for Technical,
                   Social, Cultural, and Placement Events !!"
@@ -144,32 +121,42 @@ const LoginPage = ({ handleLogin, token }) => {
                     </button>
                   </div>
                 </div>
-                <div className="mb-1">
-                  <h5 className="text-danger">{errorMessage}</h5>
-                </div>
-                <br />
-                <div className="row">
-                  <div className="col-lg-6">
+                <div className="mb-3">
+                  <label htmlFor="confirmPassword" className="form-label">
+                    Confirm Password
+                  </label>
+                  <div className="input-group">
                     <input
-                      className="btn px-4 py-2"
-                      style={{ backgroundColor: "#62c1bf", color: "white" }}
-                      type="submit"
-                      value="Login"
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      className="form-control"
+                      id="confirmPassword"
+                      placeholder="Confirm your password"
+                      required
+                      onChange={handleChange}
+                      value={formData.confirmPassword}
                     />
-                  </div>
-                  <div className="col-lg-6 p-1 text-center">
-                    <Link
-                      className="text-decoration-none blue-text "
-                      to="/forgetPass"
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      onClick={handleToggleConfirmPassword}
                     >
-                      Forgot Password ?
-                    </Link>
+                      {showConfirmPassword ? "Hide" : "Show"}
+                    </button>
                   </div>
                 </div>
+                <span className="text-danger p-2">{errorMessage}</span>
+                <br />
+                <input
+                  className="btn px-4 py-2"
+                  style={{ backgroundColor: "#62c1bf", color: "white" }}
+                  type="submit"
+                  value="Sign Up"
+                />
               </div>
               <div className="text-center p-3 ">
-                <Link className="text-decoration-none blue-text" to="/signup">
-                  Don't Have An Account ? SignUp Here
+                <Link className="text-decoration-none blue-text" to="/">
+                  Already Have An Account ? Login Here
                 </Link>
               </div>
             </form>
@@ -180,4 +167,4 @@ const LoginPage = ({ handleLogin, token }) => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;

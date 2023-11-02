@@ -35,11 +35,11 @@ const BarGraph = () => {
 
   const getColorForRating = (rating) => {
     if (rating >= 4) {
-      return "rgba(0, 100, 100, 0.7)"; // Darker shade of teal
+      return "rgba(0, 100, 100, 0.7)"; 
     } else if (rating >= 3) {
-      return "rgba(150, 130, 0, 0.7)"; // Darker shade of gold
+      return "rgba(150, 130, 0, 0.7)"; 
     } else {
-      return "rgba(150, 0, 30, 0.7)"; // Darker shade of red
+      return "rgba(150, 0, 30, 0.7)"; 
     }
   };
 
